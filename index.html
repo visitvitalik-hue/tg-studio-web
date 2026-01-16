@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Content Master Command Center</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #050505; color: white; -webkit-tap-highlight-color: transparent; }
+        
+        .tab-btn { padding: 12px; flex: 1; text-align: center; border-bottom: 2px solid #222; color: #666; font-weight: 700; transition: all 0.3s; font-size: 12px; letter-spacing: 0.5px; }
+        .tab-btn.active { border-bottom-color: #3B82F6; color: white; }
+        .tab-btn.partner-tab.active { border-bottom-color: #F59E0B; color: #F59E0B; }
+        .tab-btn.manual-tab.active { border-bottom-color: #10B981; color: #10B981; }
+
+        .mode-card {
+            background: #151515; border: 1px solid #262626; border-radius: 16px; padding: 12px;
+            display: flex; flex-direction: column; gap: 8px; transition: all 0.2s; cursor: pointer;
+        }
+        .mode-card.active { border-color: #3B82F6; background: #1E293B; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        
+        .video-container {
+            width: 100%; height: 220px; background: #000; border-radius: 12px; 
+            overflow: hidden; margin-bottom: 16px; border: 1px dashed #333;
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        video { width: 100%; height: 100%; object-fit: contain; }
+        
+        .btn-main {
+            background: #3B82F6; width: 100%; padding: 16px; border-radius: 12px;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            position: fixed; bottom: 16px; left: 16px; right: 16px; width: calc(100% - 32px); z-index: 50;
+        }
+        
+        .hidden { display: none !important; }
+        
+        .caption-input {
+            background: #151515; border: 1px solid #262626; 
+            border-radius: 12px; width: 100%; padding: 12px; 
+            color: white; outline: none; font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .caption-input:focus { border-color: #3B82F6; }
+
+        /* Manual Styles */
+        .manual-card {
+            background: #111; border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 12px;
+        }
+        .manual-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .manual-icon { font-size: 24px; }
+        .manual-title { font-weight: 700; color: white; font-size: 16px; }
+        .manual-desc { font-size: 13px; color: #aaa; line-height: 1.4; margin-bottom: 12px; }
+        .manual-btn {
+            background: #222; border: 1px solid #444; color: white; padding: 8px 16px; 
+            border-radius: 8px; font-size: 12px; font-weight: 600; width: 100%; text-align: center;
+        }
+        
+        /* Slider Styles */
+        .settings-panel {
+            background: #1E1E1E; border: 1px solid #333; border-radius: 12px; padding: 12px;
+            margin-bottom: 16px; margin-top: -10px;
+        }
+        input[type=range] {
+            width: 100%; -webkit-appearance: none; background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #3B82F6; cursor: pointer; margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #444; border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- TAB NAVIGATION -->
+    <div class="flex sticky top-0 bg-[#050505] z-50 border-b border-[#222]">
+        <div class="tab-btn active" onclick="switchTab('video')">🎬 MEDIA</div>
+        <div class="tab-btn" onclick="switchTab('text')">✍️ TEXT</div>
+        <div class="tab-btn partner-tab" onclick="switchTab('partner')">🤝 PARTNER</div>
+        <div class="tab-btn manual-tab" onclick="switchTab('manual')">ℹ️ MANUAL</div>
+    </div>
+
+    <!-- 1. SECTION: VIDEO STUDIO -->
+    <div id="video-section" class="p-4 flex flex-col pb-24 overflow-y-auto">
+        <div class="video-container" onclick="document.getElementById('videoInput').click()">
+            <video id="previewPlayer" controls class="hidden"></video>
+            <div id="uploadPlaceholder" class="text-center">
+                <div class="text-4xl mb-3">📂</div>
+                <div class="text-sm font-bold text-gray-400">Нажми для загрузки</div>
+                <div class="text-xs text-gray-600 mt-1">MP4 / MOV до 50MB</div>
+            </div>
+        </div>
+        <input type="file" id="videoInput" accept="video/mp4,video/quicktime,video/webm,image/*" multiple style="display: none;" onchange="handleFileSelect(this)">
+
+        <div class="mb-6">
+            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 ml-1">Подпись (для видео)</h3>
+            <textarea id="videoCaption" rows="2" class="caption-input" placeholder="Напиши текст поста здесь..."></textarea>
+        </div>
+
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 ml-1">Режим обработки</h3>
+        
+        <!-- Strip Settings (Hidden by default) -->
+        <div id="stripSettings" class="settings-panel hidden">
+            <div class="flex justify-between text-xs font-bold text-gray-300 mb-2">
+                <span>Количество частей:</span>
+                <span id="stripCountVal" class="text-blue-400">10</span>
+            </div>
+            <input type="range" id="stripCount" min="1" max="20" value="10" oninput="updateStripVal(this.value)">
+            <div class="flex justify-between text-[10px] text-gray-500 mt-1">
+                <span>1</span>
+                <span>20</span>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="mode-card" id="card-slideshow" onclick="selectVideoMode('slideshow', this)">
+                <div class="text-2xl">📸</div>
+                <div class="font-bold text-sm text-white">Slideshow</div>
+                <div class="text-[10px] text-gray-500">Видео из фото</div>
+            </div>
+
+            <div class="mode-card active" id="card-circle" onclick="selectVideoMode('circle', this)">
+                <div class="text-2xl">🔵</div>
+                <div class="font-bold text-sm text-white">Fake Live</div>
+                <div class="text-[10px] text-gray-500">Кружочек</div>
+            </div>
+            
+            <div class="mode-card" id="card-avatar" onclick="selectVideoMode('avatar', this)">
+                <div class="text-2xl">🟣</div>
+                <div class="font-bold text-sm text-white">Live Avatar</div>
+                <div class="text-[10px] text-gray-500">Профиль HQ</div>
+            </div>
+
+            <div class="mode-card" id="card-grid_3x3" onclick="selectVideoMode('grid_3x3', this)">
+                <div class="text-2xl">🧩</div>
+                <div class="font-bold text-sm text-white">Сетка 3x3</div>
+                <div class="text-[10px] text-gray-500">Стикерпак</div>
+            </div>
+            
+            <!-- NEW: DYNAMIC STRIP -->
+            <div class="mode-card" id="card-strip" onclick="selectVideoMode('strip', this)">
+                <div class="text-2xl">➖</div>
+                <div class="font-bold text-sm text-white">Настраиваемая Полоса</div>
+                <div class="text-[10px] text-gray-500">До 20 частей</div>
+            </div>
+
+            <div class="mode-card" id="card-fx_boomerang" onclick="selectVideoMode('fx_boomerang', this)">
+                <div class="text-2xl">♾️</div>
+                <div class="font-bold text-sm text-white">Boomerang</div>
+                <div class="text-[10px] text-gray-500">Залипалово</div>
+            </div>
+            <div class="mode-card" id="card-9_16" onclick="selectVideoMode('9_16', this)">
+                <div class="text-2xl">📱</div>
+                <div class="font-bold text-sm text-white">Reels 9:16</div>
+                <div class="text-[10px] text-gray-500">Для Stories</div>
+            </div>
+            <div class="mode-card" id="card-16_9" onclick="selectVideoMode('16_9', this)">
+                <div class="text-2xl">🖥️</div>
+                <div class="font-bold text-sm text-white">Tube 16:9</div>
+                <div class="text-[10px] text-gray-500">Горизонталь</div>
+            </div>
+            <div class="mode-card" id="card-fx_audio" onclick="selectVideoMode('fx_audio', this)">
+                <div class="text-2xl">🎵</div>
+                <div class="font-bold text-sm text-white">MP3 Audio</div>
+                <div class="text-[10px] text-gray-500">Вытащить звук</div>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="sendVideoTask()">ОТПРАВИТЬ В РАБОТУ</button>
+    </div>
+
+    <!-- 2. TEXT LAB -->
+    <div id="text-section" class="p-4 hidden flex flex-col h-screen pb-24">
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Шаблон поста</h3>
+        <div class="grid grid-cols-1 gap-2 mb-4 overflow-y-auto flex-grow pr-1" style="max-height: 50vh;">
+            <div class="bg-[#111] border border-[#333] p-4 rounded-xl cursor-pointer hover:border-blue-500 transition active" onclick="selectTemplate('insider', this)">
+                <div class="text-blue-400 font-bold text-sm">🕵️ The Insider</div>
+                <div class="text-xs text-gray-500">Секреты, сливы, инсайды</div>
+            </div>
+            <div class="bg-[#111] border border-[#333] p-4 rounded-xl cursor-pointer hover:border-blue-500 transition" onclick="selectTemplate('pov', this)">
+                <div class="text-purple-400 font-bold text-sm">👁️ POV: Gen Z</div>
+                <div class="text-xs text-gray-500">Жиза, сленг, коротко</div>
+            </div>
+             <div class="bg-[#111] border border-[#333] p-4 rounded-xl cursor-pointer hover:border-blue-500 transition" onclick="selectTemplate('story', this)">
+                <div class="text-green-400 font-bold text-sm">📖 Storyteller</div>
+                <div class="text-xs text-gray-500">Путь героя, кейс, проблема/решение</div>
+            </div>
+             <div class="bg-[#111] border border-[#333] p-4 rounded-xl cursor-pointer hover:border-blue-500 transition" onclick="selectTemplate('flash_sale', this)">
+                <div class="text-amber-400 font-bold text-sm">⚡ Flash Sale</div>
+                <div class="text-xs text-gray-500">Срочно, скидки, дедлайн</div>
+            </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-[#222]">
+            <textarea id="promptInput" rows="3" class="caption-input" placeholder="Тема поста..."></textarea>
+            <button class="btn-gen w-full mt-4 bg-emerald-500 text-black font-bold py-4 rounded-xl shadow-lg shadow-emerald-900/20" onclick="sendTextTask()">СГЕНЕРИРОВАТЬ</button>
+        </div>
+    </div>
+
+    <!-- 3. PARTNER -->
+    <div id="partner-section" class="p-4 hidden flex flex-col flex-grow">
+        <div class="bg-gradient-to-br from-amber-900/20 to-black border border-amber-900/50 rounded-2xl p-6 text-center mb-6 relative overflow-hidden">
+             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-yellow-300"></div>
+            <div class="text-4xl mb-2">👑</div>
+            <h2 class="text-xl font-bold text-amber-500 mb-1">Партнерский Клуб</h2>
+            <p class="text-xs text-gray-400">Приглашай друзей — получай VIP доступ</p>
+        </div>
+        
+        <div class="bg-[#111] p-4 rounded-xl border border-[#222] mb-4">
+            <div class="text-xs text-gray-500 uppercase font-bold mb-2">Твоя реферальная ссылка:</div>
+            <div class="flex items-center gap-2 bg-black p-3 rounded-lg border border-[#333]">
+                <code id="ref-link" class="text-xs text-blue-400 overflow-hidden text-ellipsis whitespace-nowrap w-full">loading...</code>
+                <button onclick="copyLink()" class="text-gray-400 hover:text-white">📋</button>
+            </div>
+        </div>
+        <button class="btn-partner w-full mt-auto bg-amber-500 text-black font-bold py-4 rounded-xl shadow-lg shadow-amber-900/20" onclick="shareLink()">ПРИГЛАСИТЬ ДРУГА 🚀</button>
+    </div>
+
+    <!-- 4. MANUAL -->
+    <div id="manual-section" class="p-4 hidden flex flex-col pb-24 overflow-y-auto">
+        <h2 class="text-xl font-bold text-white mb-4">Гайд по режимам</h2>
+
+        <div class="manual-card">
+            <div class="manual-header">
+                <span class="manual-icon">🔵</span>
+                <span class="manual-title">Fake Live</span>
+            </div>
+            <p class="manual-desc">Делает кружочек (video note) из любого видео. <br>Внимание: Телеграм сам скругляет края при отправке.</p>
+            <button class="manual-btn" onclick="quickSelect('circle')">Включить этот режим</button>
+        </div>
+
+        <div class="manual-card">
+            <div class="manual-header">
+                <span class="manual-icon">📸</span>
+                <span class="manual-title">Слайд-шоу</span>
+            </div>
+            <p class="manual-desc">Собери видео для Reels из своих фото. <br>1. Нажми кнопку. <br>2. Загрузи до 10 фото. <br>3. Бот сам склеит их под музыку.</p>
+            <button class="manual-btn" onclick="quickSelect('slideshow')">Включить этот режим</button>
+        </div>
+
+        <div class="manual-card">
+            <div class="manual-header">
+                <span class="manual-icon">➖</span>
+                <span class="manual-title">Полоса (Custom Strip)</span>
+            </div>
+            <p class="manual-desc">Настраиваемая нарезка. Выбери от 1 до 20 частей. Идеально для длинных баннеров на ПК.</p>
+            <button class="manual-btn" onclick="quickSelect('strip')">Включить этот режим</button>
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.setHeaderColor('#050505');
+        tg.setBackgroundColor('#050505');
+
+        const userId = tg.initDataUnsafe?.user?.id || 'unknown';
+        const botUsername = 'you_tg_studio_bot';
+        const refLink = `https://t.me/${botUsername}?start=${userId}`;
+
+        document.getElementById('ref-link').innerText = refLink;
+        
+        let currentTab = 'video';
+        let currentVideoMode = 'circle';
+        let currentTemplate = 'insider';
+        let stripCount = 10;
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            ['video', 'text', 'partner', 'manual'].forEach(t => {
+                const el = document.getElementById(t + '-section');
+                if(t === tab) el.classList.remove('hidden'); else el.classList.add('hidden');
+            });
+            haptic();
+        }
+
+        function quickSelect(mode) {
+            switchTab('video');
+            const card = document.getElementById('card-' + mode);
+            if(card) selectVideoMode(mode, card);
+            document.getElementById('video-section').scrollTop = 0;
+        }
+
+        function handleFileSelect(input) {
+            const files = input.files;
+            if (files.length > 0) {
+                const file = files[0];
+                const url = URL.createObjectURL(file);
+                const player = document.getElementById('previewPlayer');
+                
+                if(file.type.startsWith('video')) {
+                     player.src = url;
+                     player.classList.remove('hidden');
+                     document.getElementById('uploadPlaceholder').classList.add('hidden');
+                } else {
+                     document.getElementById('uploadPlaceholder').innerHTML = `<div class="text-green-400 text-4xl">✅</div><div class="text-sm font-bold text-white">Выбрано: ${files.length}</div>`;
+                }
+                haptic();
+            }
+        }
+
+        function selectVideoMode(mode, el) {
+            currentVideoMode = mode;
+            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            
+            // Show/Hide Slider for Strip mode
+            if(mode === 'strip') {
+                document.getElementById('stripSettings').classList.remove('hidden');
+            } else {
+                document.getElementById('stripSettings').classList.add('hidden');
+            }
+            
+            haptic();
+        }
+
+        function updateStripVal(val) {
+            stripCount = val;
+            document.getElementById('stripCountVal').innerText = val;
+        }
+
+        function sendVideoTask() {
+            const caption = document.getElementById('videoCaption').value;
+            // Если выбран режим strip, модифицируем режим в формат grid_Nx1
+            let modeToSend = currentVideoMode;
+            if(modeToSend === 'strip') {
+                modeToSend = `grid_${stripCount}x1`;
+            }
+
+            tg.sendData(JSON.stringify({ 
+                type: 'video_setup', 
+                mode: modeToSend,
+                caption: caption 
+            }));
+        }
+
+        function selectTemplate(tpl, el) {
+            currentTemplate = tpl;
+            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active')); // visual simplified
+            haptic();
+        }
+
+        function sendTextTask() {
+            const prompt = document.getElementById('promptInput').value;
+            if (!prompt) return tg.showAlert("Введите тему!");
+            tg.sendData(JSON.stringify({ type: 'text_gen', template: currentTemplate, prompt: prompt }));
+        }
+
+        function shareLink() {
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("🔥 Зацени этот инструмент для контента!")}`);
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(refLink);
+            tg.showAlert("Ссылка скопирована!");
+            haptic();
+        }
+
+        function haptic() {
+            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        }
+    </script>
+</body>
+</html>
