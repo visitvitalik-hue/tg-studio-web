@@ -3,28 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>CADRHUB Studio — Poster Menu</title>
+  <title>CADRHUB — Poster Menu</title>
   <meta name="theme-color" content="#0b0f18" />
+
   <style>
     :root{
       --bg:#0b0f18;
-      --bg2:#0f1626;
       --card:#121a2d;
       --card2:#0e1424;
       --text:#eaf0ff;
       --muted:#9aa7c7;
       --muted2:#6e7aa0;
-      --line:rgba(255,255,255,.08);
-      --glow:rgba(140,170,255,.35);
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 18px 48px rgba(0,0,0,.45);
+      --shadow2: 0 12px 24px rgba(0,0,0,.30);
       --accent:#7aa2ff;
       --accent2:#a78bfa;
       --good:#22c55e;
       --warn:#f59e0b;
       --bad:#ef4444;
-
       --r:18px;
-      --shadow: 0 18px 48px rgba(0,0,0,.45);
-      --shadow2: 0 12px 24px rgba(0,0,0,.35);
     }
 
     *{box-sizing:border-box}
@@ -38,24 +36,18 @@
         radial-gradient(900px 700px at 50% 110%, rgba(34,197,94,.10), transparent 60%),
         linear-gradient(180deg, var(--bg), #070a11);
       font: 15px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      letter-spacing:.2px;
       overflow-x:hidden;
     }
 
-    /* Safe areas */
     .safe-top{ padding-top: env(safe-area-inset-top); }
     .safe-bot{ padding-bottom: env(safe-area-inset-bottom); }
 
-    .wrap{
-      min-height:100%;
-      display:flex;
-      flex-direction:column;
-    }
+    .wrap{ min-height:100%; display:flex; flex-direction:column; }
 
     /* Topbar */
     .topbar{
       position:sticky; top:0; z-index:20;
-      background: linear-gradient(180deg, rgba(11,15,24,.92), rgba(11,15,24,.70));
+      background: linear-gradient(180deg, rgba(11,15,24,.92), rgba(11,15,24,.72));
       backdrop-filter: blur(12px);
       border-bottom:1px solid var(--line);
     }
@@ -63,19 +55,21 @@
       display:flex; align-items:center; gap:10px;
       padding: 12px 14px;
     }
+
     .brand{
       display:flex; align-items:center; gap:10px;
-      flex:1;
-      min-width:0;
+      flex:1; min-width:0;
     }
+    .brand a{ text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px; min-width:0; }
+
     .logo{
       width:34px;height:34px;border-radius:12px;
       background:
         radial-gradient(18px 18px at 30% 30%, rgba(255,255,255,.25), transparent 55%),
         linear-gradient(135deg, rgba(122,162,255,.95), rgba(167,139,250,.85));
       box-shadow: 0 10px 26px rgba(122,162,255,.18), 0 10px 22px rgba(167,139,250,.12);
-      position:relative;
-      overflow:hidden;
+      position:relative; overflow:hidden;
+      flex:0 0 auto;
     }
     .logo:after{
       content:"";
@@ -91,12 +85,9 @@
       100%{ transform: translateX(30%) rotate(18deg); opacity:0}
     }
 
-    .brand-title{
-      display:flex; flex-direction:column; min-width:0;
-    }
+    .brand-title{ display:flex; flex-direction:column; min-width:0; }
     .brand-title b{
-      font-size:14px; letter-spacing:.8px;
-      text-transform:uppercase;
+      font-size:14px; letter-spacing:.8px; text-transform:uppercase;
       white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
     .brand-title small{
@@ -119,15 +110,10 @@
     }
     .icon-btn:active{ transform: translateY(1px) scale(.99); }
     .icon-btn:hover{ border-color: rgba(122,162,255,.35); }
-    .icon-btn .dot{
-      width:8px;height:8px;border-radius:999px;background:var(--good);
-      box-shadow: 0 0 0 4px rgba(34,197,94,.12);
-    }
+    .dot{ width:8px;height:8px;border-radius:999px;background:var(--good); box-shadow: 0 0 0 4px rgba(34,197,94,.12); }
 
-    /* Header hero */
-    .hero{
-      padding: 14px 14px 6px;
-    }
+    /* Hero */
+    .hero{ padding: 12px 14px 6px; }
     .hero-card{
       border-radius: var(--r);
       border: 1px solid var(--line);
@@ -137,43 +123,21 @@
         linear-gradient(180deg, rgba(18,26,45,.80), rgba(14,20,36,.82));
       box-shadow: var(--shadow);
       padding: 14px;
-      position:relative;
       overflow:hidden;
     }
-    .hero-card:before{
-      content:"";
-      position:absolute; inset: -1px;
-      background: radial-gradient(800px 280px at 30% 10%, rgba(122,162,255,.20), transparent 60%);
-      pointer-events:none;
-    }
-    .hero-top{
-      display:flex; align-items:flex-start; gap:10px;
-    }
     .pill{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
+      font-size:12px; padding:6px 10px; border-radius:999px;
       border:1px solid rgba(122,162,255,.35);
       background: rgba(122,162,255,.12);
       color: rgba(234,240,255,.95);
       width:max-content;
+      display:inline-block;
+      margin-right:8px;
     }
-    .hero h1{
-      margin: 8px 0 6px;
-      font-size: 18px;
-      line-height:1.15;
-      letter-spacing:.2px;
-    }
-    .hero p{
-      margin:0;
-      color: var(--muted);
-      font-size: 13px;
-    }
+    .hero h1{ margin: 10px 0 6px; font-size: 18px; line-height:1.15; }
+    .hero p{ margin:0; color: var(--muted); font-size: 13px; }
 
-    .hero-actions{
-      margin-top: 12px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
+    .hero-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
     .btn{
       border:1px solid var(--line);
       background: rgba(18,26,45,.60);
@@ -185,6 +149,7 @@
       user-select:none;
       display:flex; align-items:center; gap:10px;
       transition: transform .08s ease, border-color .2s ease, background .2s ease;
+      flex:1 1 160px;
     }
     .btn:active{ transform: translateY(1px) scale(.99); }
     .btn.primary{
@@ -198,13 +163,12 @@
       display:flex; align-items:center; justify-content:center;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
+      flex:0 0 auto;
     }
     .btn small{ color: var(--muted); display:block; margin-top:2px; font-size:11px; }
 
-    /* Search */
-    .search{
-      padding: 10px 14px 0;
-    }
+    /* Search (no shifts) */
+    .search{ padding: 10px 14px 0; }
     .searchbox{
       display:flex; gap:10px; align-items:center;
       border:1px solid var(--line);
@@ -212,15 +176,24 @@
       border-radius: 16px;
       padding: 10px 12px;
       box-shadow: var(--shadow2);
+      width:100%;
     }
     .searchbox input{
       flex:1;
+      min-width: 0;
       border:0; outline:none;
       background:transparent;
       color:var(--text);
       font-size:14px;
     }
     .searchbox input::placeholder{ color: rgba(154,167,199,.7); }
+    .chipRow{
+      display:flex; gap:8px;
+      flex:0 0 auto;
+      overflow:auto;
+      max-width: 45%;
+      padding-bottom: 2px;
+    }
     .chip{
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05);
@@ -231,6 +204,7 @@
       cursor:pointer;
       user-select:none;
       white-space:nowrap;
+      flex:0 0 auto;
     }
     .chip.active{
       border-color: rgba(122,162,255,.45);
@@ -238,15 +212,16 @@
       color: rgba(234,240,255,.95);
     }
 
-    /* Sections */
+    /* Content */
     .content{
       padding: 10px 14px 18px;
       display:flex;
       flex-direction:column;
-      gap: 14px;
+      gap: 12px;
       flex:1;
     }
 
+    /* Accordion section */
     .section{
       border-radius: var(--r);
       border:1px solid var(--line);
@@ -254,37 +229,47 @@
       box-shadow: var(--shadow2);
       overflow:hidden;
     }
-    .section-head{
-      padding: 12px 12px 10px;
-      display:flex; justify-content:space-between; align-items:flex-end; gap:10px;
-      border-bottom: 1px solid var(--line);
+    .section-toggle{
+      width:100%;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding: 12px 12px;
+      border:0;
       background: linear-gradient(180deg, rgba(18,26,45,.55), rgba(14,20,36,.35));
+      color: var(--text);
+      cursor:pointer;
+      user-select:none;
     }
-    .section-head h2{
-      margin:0;
-      font-size: 14px;
-      letter-spacing:.2px;
+    .section-toggle:active{ transform: translateY(1px); }
+    .sec-left{ display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
+    .section-toggle h2{ margin:0; font-size: 14px; }
+    .section-toggle p{ margin:0; color: var(--muted); font-size: 12px; }
+    .sec-right{ display:flex; align-items:center; gap:10px; }
+    .count{ color: var(--muted2); font-size: 12px; white-space:nowrap; }
+    .chev{
+      width:30px;height:30px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+      transition: transform .18s ease;
     }
-    .section-head p{
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .count{
-      color: var(--muted2);
-      font-size: 12px;
-      white-space:nowrap;
-    }
+    .section.open .chev{ transform: rotate(180deg); }
 
-    /* Cards grid */
-    .grid{
+    .section-body{
+      display:none;
       padding: 12px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+    .section.open .section-body{ display:block; }
+
+    .grid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
     @media (min-width: 520px){
       .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .chipRow{ max-width: 55%; }
     }
 
     .card{
@@ -296,20 +281,24 @@
       padding: 12px;
       cursor:pointer;
       user-select:none;
-      position:relative;
-      overflow:hidden;
-      transition: transform .10s ease, border-color .2s ease, background .2s ease;
       min-height: 118px;
       display:flex;
       flex-direction:column;
       gap:8px;
       box-shadow: 0 12px 24px rgba(0,0,0,.25);
+      transition: transform .10s ease, border-color .2s ease;
     }
     .card:active{ transform: translateY(1px) scale(.99); }
     .card:hover{ border-color: rgba(122,162,255,.38); }
 
-    .card .row{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    .row{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .ico{
+      width:34px; height:34px; border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-size: 16px;
+      flex:0 0 auto;
     }
     .badge{
       font-size: 11px;
@@ -320,25 +309,9 @@
       color: var(--muted);
       white-space:nowrap;
     }
-    .ico{
-      width:34px; height:34px; border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      font-size: 16px;
-      flex:0 0 auto;
-    }
-    .card h3{
-      margin:0;
-      font-size: 13px;
-      line-height:1.15;
-    }
-    .card p{
-      margin:0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height:1.25;
-    }
+    .card h3{ margin:0; font-size: 13px; line-height:1.15; }
+    .card p{ margin:0; color: var(--muted); font-size: 12px; line-height:1.25; }
+
     .mini{
       margin-top:auto;
       display:flex; align-items:center; justify-content:space-between;
@@ -359,7 +332,6 @@
       white-space:nowrap;
     }
 
-    /* Footer */
     .footer{
       padding: 12px 14px 18px;
       color: var(--muted2);
@@ -416,11 +388,9 @@
       border-color: rgba(34,197,94,.35);
       background: rgba(34,197,94,.12);
     }
-    .btn.ghost{
-      background: rgba(255,255,255,.05);
-    }
+    .btn.ghost{ background: rgba(255,255,255,.05); }
 
-    /* Small toast */
+    /* Toast */
     .toast{
       position:fixed;
       left:50%;
@@ -439,8 +409,6 @@
     }
     .toast.show{ display:block; animation: pop .18s ease-out; }
     @keyframes pop{ from{ transform: translateX(-50%) translateY(6px); opacity:0 } to{ transform: translateX(-50%) translateY(0); opacity:1 } }
-
-    /* Reduced motion */
     @media (prefers-reduced-motion: reduce){
       .logo:after{ animation:none }
       .toast.show{ animation:none }
@@ -453,11 +421,13 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="brand-title">
-          <b>CADRHUB</b>
-          <small id="subline">Poster-menu • выбери режим</small>
-        </div>
+        <a href="#" id="logoLink" title="Открыть канал/чат">
+          <div class="logo" aria-hidden="true"></div>
+          <div class="brand-title">
+            <b>CADRHUB</b>
+            <small id="subline">кликабельный постер • выбирай режим</small>
+          </div>
+        </a>
       </div>
 
       <button class="icon-btn" id="btnStatus" type="button" title="Статус">
@@ -473,30 +443,23 @@
 
   <div class="hero">
     <div class="hero-card">
-      <div class="hero-top">
-        <span class="pill">⚡ Studio Menu</span>
-        <span class="pill" style="border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.10)">🎛 кликабельный постер</span>
-      </div>
-      <h1>Собери контент-пакет за 1 минуту</h1>
+      <span class="pill">⚡ Studio Menu</span>
+      <span class="pill" style="border-color:rgba(167,139,250,.45);background:rgba(167,139,250,.10)">🎛 аккордеон</span>
+
+      <h1>Выбери режим → вернись в чат → отправь медиа</h1>
       <p>
-        Ты выбираешь режим тут. Бот попросит видео/фото в чате, обработает — и предложит ещё “вау” варианты.
-        <br/>Никаких “загрузи ещё раз” — всё по шагам.
+        Это витрина-постер. После выбора режима бот <b>в чате</b> попросит видео/фото/текст и сделает результат.
+        <br/>Чтобы не было “я в мини-апп жду, а бот пишет” — <b>все загрузки делаем в чате</b>.
       </p>
 
       <div class="hero-actions">
         <button class="btn primary" id="btnHow" type="button">
           <span class="k">🧭</span>
-          <span><b>Как это работает</b><small>3 шага, чтобы не путаться</small></span>
+          <span><b>Как это работает</b><small>3 шага без подвоха</small></span>
         </button>
-
-        <button class="btn" id="btnSendHelp" type="button">
-          <span class="k">📎</span>
-          <span><b>Как отправлять видео</b><small>качество / документ</small></span>
-        </button>
-
-        <button class="btn" id="btnCatalog" type="button">
-          <span class="k">🧩</span>
-          <span><b>Показать всё</b><small>режимы и пакеты</small></span>
+        <button class="btn" id="btnBackToChat" type="button">
+          <span class="k">↩️</span>
+          <span><b>Вернуться в чат</b><small>и продолжить в боте</small></span>
         </button>
       </div>
     </div>
@@ -505,74 +468,142 @@
   <div class="search">
     <div class="searchbox">
       <span style="opacity:.85">🔎</span>
-      <input id="q" type="text" placeholder="Поиск: кружок, 9:16, коллаж, эмодзи…" autocomplete="off" />
-      <span class="chip active" id="chipAll">Все</span>
-      <span class="chip" id="chipVideo">Видео</span>
-      <span class="chip" id="chipGrid">Сетки</span>
-      <span class="chip" id="chipPost">Пост</span>
+      <input id="q" type="text" placeholder="Поиск: кружок, 9:16, коллаж, эмодзи, рулетка…" autocomplete="off" />
+      <div class="chipRow">
+        <span class="chip active" data-chip="all">Все</span>
+        <span class="chip" data-chip="video">Видео</span>
+        <span class="chip" data-chip="grid">Сетки</span>
+        <span class="chip" data-chip="post">Пост</span>
+        <span class="chip" data-chip="promo">Акции</span>
+      </div>
     </div>
   </div>
 
   <div class="content" id="content">
 
-    <!-- SECTION: VIDEO -->
-    <div class="section" data-section="video">
-      <div class="section-head">
-        <div>
+    <!-- ИЗ ВИДЕО (7) -->
+    <div class="section open" data-section="video">
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
           <h2>🎬 Из видео</h2>
-          <p>Кружки, аватары, форматы, эффекты</p>
+          <p>кружок • аватар • форматы • эффекты</p>
         </div>
-        <div class="count" id="countVideo"></div>
+        <div class="sec-right">
+          <span class="count">7</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridVideo"></div>
       </div>
-
-      <div class="grid" id="gridVideo"></div>
     </div>
 
-    <!-- SECTION: GRIDS -->
+    <!-- СЕТКИ/ЭМ-ВИДЕО (3) -->
     <div class="section" data-section="grid">
-      <div class="section-head">
-        <div>
-          <h2>🧩 Сетки / эмодзи-видео</h2>
-          <p>3×3, 20×1, random pack</p>
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
+          <h2>🧩 Сетки / эм-видео</h2>
+          <p>3×3 • 20×1 • random pack</p>
         </div>
-        <div class="count" id="countGrid"></div>
+        <div class="sec-right">
+          <span class="count">3</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridGrid"></div>
       </div>
-
-      <div class="grid" id="gridGrid"></div>
     </div>
 
-    <!-- SECTION: COLLAGE -->
+    <!-- КОЛЛАЖИ (3) -->
     <div class="section" data-section="collage">
-      <div class="section-head">
-        <div>
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
           <h2>🖼 Коллажи</h2>
-          <p>Из фото или из видео (лайтово)</p>
+          <p>фото 2×2 • фото 3×3 • из видео 2×2</p>
         </div>
-        <div class="count" id="countCollage"></div>
+        <div class="sec-right">
+          <span class="count">3</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridCollage"></div>
       </div>
-
-      <div class="grid" id="gridCollage"></div>
     </div>
 
-    <!-- SECTION: POSTS -->
+    <!-- ПОСТЫ/СТИЛИ (6) -->
     <div class="section" data-section="post">
-      <div class="section-head">
-        <div>
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
           <h2>✍️ Посты / стили</h2>
-          <p>Примеры прямо как в Telegram</p>
+          <p>INSIDER • POV • OLD MONEY • микс • 2 пака</p>
         </div>
-        <div class="count" id="countPost"></div>
+        <div class="sec-right">
+          <span class="count">6</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridPost"></div>
       </div>
+    </div>
 
-      <div class="grid" id="gridPost"></div>
+    <!-- ИГРЫ -->
+    <div class="section" data-section="games">
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
+          <h2>🎮 Игры</h2>
+          <p>рулетка VIP • мини-челленджи</p>
+        </div>
+        <div class="sec-right">
+          <span class="count">2</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridGames"></div>
+      </div>
+    </div>
+
+    <!-- ЗАЛ СЛАВЫ -->
+    <div class="section" data-section="hall">
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
+          <h2>🏆 Зал славы</h2>
+          <p>топ дня • недели • месяца</p>
+        </div>
+        <div class="sec-right">
+          <span class="count">1</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridHall"></div>
+      </div>
+    </div>
+
+    <!-- АКЦИИ / АДМИН -->
+    <div class="section" data-section="promo">
+      <button class="section-toggle" type="button">
+        <div class="sec-left">
+          <h2>🔥 Акции (админ)</h2>
+          <p>VIP выдача • билет-таймер • розыгрыш</p>
+        </div>
+        <div class="sec-right">
+          <span class="count">3</span>
+          <span class="chev">⌄</span>
+        </div>
+      </button>
+      <div class="section-body">
+        <div class="grid" id="gridPromo"></div>
+      </div>
     </div>
 
   </div>
 
   <div class="footer safe-bot">
-    <div>
-      <b>CADRHUB</b> • выбираешь режим здесь → <b>загружаешь в чат</b> → получаешь результат и “ещё” пакеты.
-    </div>
+    <div><b>CADRHUB</b> • выбираешь здесь → работаешь в чате → получаешь “ещё” пакеты</div>
   </div>
 </div>
 
@@ -586,23 +617,21 @@
       </div>
       <button class="icon-btn" id="mX" type="button" title="Закрыть">✕</button>
     </div>
-
     <div class="sheet-body">
       <div class="hint" id="mHint"></div>
       <div style="height:10px"></div>
-      <div class="hint" id="mNext" style="border-color:rgba(122,162,255,.24); background:rgba(122,162,255,.06)">
-        <b>Дальше:</b> я отправлю боту выбранный режим. Бот попросит медиа в чате (видео/фото) — это нормально.
+      <div class="hint" style="border-color:rgba(122,162,255,.24); background:rgba(122,162,255,.06)">
+        <b>Важно:</b> после выбора режима бот попросит медиа <b>в чате</b>. Это специально, чтобы не было “жду в мини-апп и не вижу сообщений”.
       </div>
     </div>
-
     <div class="sheet-actions">
       <button class="btn good" id="mGo" type="button">
         <span class="k">✅</span>
-        <span><b>Выбрать режим</b><small>и вернуться в чат</small></span>
+        <span><b>Выбрать</b><small>и вернуться в чат</small></span>
       </button>
       <button class="btn ghost" id="mStay" type="button">
         <span class="k">👀</span>
-        <span><b>Остаться тут</b><small>посмотреть ещё</small></span>
+        <span><b>Ещё посмотрю</b><small>остаться тут</small></span>
       </button>
     </div>
   </div>
@@ -611,9 +640,32 @@
 <div class="toast" id="toast"></div>
 
 <script>
-(function(){
+(() => {
+  // === CONFIG (ты поменяешь потом) ===
+  const LOGO_URL = ""; // например: "https://t.me/cadrhub_chat" или "https://t.me/cadrhub"
+  const BOT_BACK_HINT = "Возвращайся в чат и отправляй медиа — бот всё поймёт.";
+
   // --- Telegram WebApp bridge (safe) ---
   const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+
+  function toast(msg){
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  function haptic(kind){
+    try{
+      if(tg && tg.HapticFeedback){
+        const HF = tg.HapticFeedback;
+        if(kind === 'light') HF.impactOccurred('light');
+        else if(kind === 'medium') HF.impactOccurred('medium');
+        else HF.notificationOccurred(kind || 'success');
+      }
+    }catch(e){}
+  }
 
   function setStatus(){
     const dot = document.getElementById('dot');
@@ -621,36 +673,31 @@
     if(tg){
       statusText.textContent = 'TG';
       dot.style.background = 'var(--good)';
-      try{
-        tg.ready();
-        tg.expand();
-        // optional: themed header
-        tg.setHeaderColor && tg.setHeaderColor('#0b0f18');
-      }catch(e){}
+      try{ tg.ready(); tg.expand(); }catch(e){}
     } else {
       statusText.textContent = 'WEB';
       dot.style.background = 'var(--warn)';
     }
   }
 
-  function haptic(type){
-    try{
-      if(tg && tg.HapticFeedback){
-        const HF = tg.HapticFeedback;
-        if(type === 'light') HF.impactOccurred('light');
-        else if(type === 'medium') HF.impactOccurred('medium');
-        else if(type === 'heavy') HF.impactOccurred('heavy');
-        else HF.notificationOccurred(type || 'success');
+  function openLink(url){
+    if(!url) return;
+    if(tg){
+      try{
+        // для t.me ссылок лучше openTelegramLink
+        if(url.startsWith("https://t.me/") && tg.openTelegramLink){
+          tg.openTelegramLink(url);
+        } else if(tg.openLink){
+          tg.openLink(url);
+        } else {
+          window.open(url, "_blank");
+        }
+      }catch(e){
+        window.open(url, "_blank");
       }
-    }catch(e){}
-  }
-
-  function toast(msg){
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(el._t);
-    el._t = setTimeout(()=> el.classList.remove('show'), 2200);
+    } else {
+      window.open(url, "_blank");
+    }
   }
 
   function sendPayload(payload){
@@ -669,158 +716,170 @@
     }
   }
 
-  // --- Data model for poster cards ---
+  // --- Clickable logo ---
+  const logoLink = document.getElementById('logoLink');
+  logoLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    haptic('light');
+    if(!LOGO_URL){
+      toast('Пока нет ссылки. Дашь — вставим в LOGO_URL.');
+      return;
+    }
+    openLink(LOGO_URL);
+  });
+
+  // --- Data (точные количества как ты сказал) ---
   const MODES = [
-    // VIDEO
-    { id:'circle', section:'video', tag:'Видео', icon:'◯', title:'Fake Live (кружок)', desc:'Кружок “как живой” из твоего видео', preview:'◯ + ✍️', hint:'Бот попросит 1 видео. После готовности предложит подпись/пост.', needs:'video', badge:'top' },
-    { id:'avatar', section:'video', tag:'Видео', icon:'👤', title:'Live Avatar', desc:'Видео-аватарка: чисто, стильно, петля', preview:'👤 loop', hint:'Бот попросит 1 видео. Лучше отправлять как Документ.', needs:'video', badge:'pro' },
-    { id:'9_16', section:'video', tag:'Видео', icon:'📱', title:'9:16 (вертикаль)', desc:'Reels/Shorts: под ленту и сторис', preview:'9:16', hint:'Если кадр “далеко” — позже добавим “руль” кадра (zoom/drag).', needs:'video' },
-    { id:'16_9', section:'video', tag:'Видео', icon:'🖥', title:'16:9 (горизонталь)', desc:'YouTube/превью/экранная подача', preview:'16:9', hint:'Бот попросит 1 видео. Для качества — Документ.', needs:'video' },
-    { id:'fx_noir', section:'video', tag:'Видео', icon:'🖤', title:'Noir', desc:'Ч/Б винтажный стиль, кинематографично', preview:'🖤 + ✍️', hint:'Можно сразу предложить пост в стиле Noir / Insider / POV.', needs:'video', badge:'style' },
-    { id:'fx_boomerang', section:'video', tag:'Видео', icon:'🔁', title:'Boomerang', desc:'Петля туда-обратно: цепляет взгляд', preview:'🔁 2x', hint:'Отлично для “первого касания” и удержания.', needs:'video' },
-    { id:'fx_audio', section:'video', tag:'Видео', icon:'🎧', title:'Audio (mp3)', desc:'Вытянуть звук из видео (mp3)', preview:'mp3', hint:'Полезно для озвучки/подкаст-нарезок.', needs:'video' },
+    // VIDEO (7)
+    { id:'circle',   section:'video', tag:'video', icon:'◯',  title:'Кружок (Fake Live)', desc:'Кружок “как живой” из твоего видео', preview:'◯ + ✍️', needs:'video', hint:'Бот попросит 1 видео в чате. Потом предложит “ещё”.', badge:'TOP' },
+    { id:'avatar',   section:'video', tag:'video', icon:'👤', title:'Live Avatar', desc:'Видео-аватарка (петля)', preview:'👤 loop', needs:'video', hint:'Лучше отправлять как Документ.', badge:'PRO' },
+    { id:'9_16',     section:'video', tag:'video', icon:'📱', title:'9:16 (вертикаль)', desc:'Shorts/Reels формат', preview:'9:16', needs:'video', hint:'Скоро добавим “руль” кадра (drag/zoom).', badge:'FMT' },
+    { id:'16_9',     section:'video', tag:'video', icon:'🖥', title:'16:9 (горизонталь)', desc:'YouTube/превью/экран', preview:'16:9', needs:'video', hint:'Видео лучше как Документ.', badge:'FMT' },
+    { id:'noir',     section:'video', tag:'video', icon:'🖤', title:'Noir (стиль)', desc:'Ч/Б кино-атмосфера', preview:'🖤 + ✍️', needs:'video', hint:'Отлично с постом INSIDER/POV.', badge:'STYLE' },
+    { id:'boomer',   section:'video', tag:'video', icon:'🔁', title:'Boomerang', desc:'Петля туда-обратно', preview:'🔁', needs:'video', hint:'Вовлекает лучше всего в ленте.', badge:'VIRAL' },
+    { id:'audio',    section:'video', tag:'video', icon:'🎧', title:'Аудио (mp3)', desc:'Вытащить звук из видео', preview:'mp3', needs:'video', hint:'Для озвучки/подкастов.', badge:'UTIL' },
 
-    // GRID / EMOJI
-    { id:'grid_3x3', section:'grid', tag:'Сетки', icon:'🧩', title:'Сетка 3×3', desc:'Вирусный формат: сетка из видео', preview:'3×3', hint:'Бот попросит 1 видео. Режем на 9 “кусочков”.', needs:'video', badge:'viral' },
-    { id:'grid_20x1', section:'grid', tag:'Сетки', icon:'┃', title:'Лента 20×1', desc:'Полоса “стикеров” (как набор)', preview:'20×1', hint:'Дальше можно добавить подпись+эмодзи+пост пакетом.', needs:'video', badge:'pack' },
-    { id:'emoji_random_20', section:'grid', tag:'Сетки', icon:'🎲', title:'Random Emoji Pack', desc:'Случайный набор из 20 (вау-эффект)', preview:'🎲→🧩', hint:'Бот попросит 1 видео. Мы соберём “рандомный” набор.', needs:'video', badge:'fun' },
+    // GRID (3)
+    { id:'grid_3x3', section:'grid',  tag:'grid',  icon:'🧩', title:'Сетка 3×3', desc:'Вирусная сетка', preview:'3×3', needs:'video', hint:'1 видео → 9 плиток.', badge:'VIRAL' },
+    { id:'grid_20x1',section:'grid',  tag:'grid',  icon:'┃',  title:'Лента 20×1', desc:'Полоса “стикеров”', preview:'20×1', needs:'video', hint:'1 видео → набор.', badge:'PACK' },
+    { id:'emoji_rand',section:'grid', tag:'grid',  icon:'🎲', title:'Random pack (из 20)', desc:'Рандомный набор', preview:'🎲→20', needs:'video', hint:'Собираем “вау”.', badge:'FUN' },
 
-    // COLLAGE
-    { id:'collage_photo_2x2', section:'collage', tag:'Коллаж', icon:'🖼', title:'Коллаж фото 2×2', desc:'4 фото → один коллаж', preview:'2×2', hint:'Бот попросит 4 фото (можно альбомом), затем “Готово”.', needs:'photos' },
-    { id:'collage_photo_3x3', section:'collage', tag:'Коллаж', icon:'🧱', title:'Коллаж фото 3×3', desc:'9 фото → один коллаж', preview:'3×3', hint:'Бот попросит до 9 фото (альбомом), затем “Готово”.', needs:'photos', badge:'viral' },
-    { id:'collage_video_2x2', section:'collage', tag:'Коллаж', icon:'🎞', title:'Коллаж из видео', desc:'Один ролик → 4 кадра-коллажа', preview:'🎞→2×2', hint:'Бот попросит 1 видео. Мы возьмём 4 ярких кадра.', needs:'video', badge:'smart' },
+    // COLLAGE (3)
+    { id:'ph_2x2',   section:'collage', tag:'collage', icon:'🖼', title:'Коллаж фото 2×2', desc:'4 фото → один коллаж', preview:'2×2', needs:'photos', hint:'Отправь 4 фото альбомом.', badge:'EASY' },
+    { id:'ph_3x3',   section:'collage', tag:'collage', icon:'🧱', title:'Коллаж фото 3×3', desc:'9 фото → один коллаж', preview:'3×3', needs:'photos', hint:'Отправь до 9 фото альбомом.', badge:'VIRAL' },
+    { id:'vid_2x2',  section:'collage', tag:'collage', icon:'🎞', title:'Коллаж из видео', desc:'4 ярких кадра', preview:'🎞→2×2', needs:'video', hint:'1 видео → 4 кадра.', badge:'SMART' },
 
-    // POST
-    { id:'post_insider', section:'post', tag:'Пост', icon:'🕵️', title:'Пост: INSIDER', desc:'Секретно, уверенно, вовлекает', preview:'жирно+крючок', hint:'Можно сгенерить текст сразу (без медиа) или “под ваше видео” после рендера.', needs:'text' },
-    { id:'post_pov', section:'post', tag:'Пост', icon:'🎭', title:'Пост: POV', desc:'Коротко, дерзко, цепляет', preview:'POV: ...', hint:'Идеально в связке с кружком/эмодзи.', needs:'text' },
-    { id:'post_old_money', section:'post', tag:'Пост', icon:'💎', title:'Пост: OLD MONEY', desc:'Тихая роскошь контента', preview:'💎 стиль', hint:'Лучше всего с Live Avatar/16:9.', needs:'text' },
-    { id:'post_mix', section:'post', tag:'Пост', icon:'🧪', title:'Микс 2 стилей', desc:'Смешать два стиля в один пост', preview:'A+B', hint:'Выберешь два — я соберу микс.', needs:'text', badge:'pro' },
-    { id:'pack_boost', section:'post', tag:'Пакеты', icon:'⚡', title:'Boost Pack', desc:'Кружок + пост + 1 эмодзи', preview:'◯+✍️+🧩', hint:'Сильный “первый заход” + удержание.', needs:'video', badge:'pack' },
-    { id:'pack_creator', section:'post', tag:'Пакеты', icon:'🚀', title:'Creator Pack', desc:'9:16 + обложка + пост', preview:'📱+🖼+✍️', hint:'Самый “профессиональный” набор на запуск.', needs:'video', badge:'pack' },
+    // POSTS (6)
+    { id:'post_insider', section:'post', tag:'post', icon:'🕵️', title:'Пост: INSIDER', desc:'Секретно, уверенно, вовлекает', preview:'жирно+крючок', needs:'text', hint:'Можно без видео или “под видео” после рендера.', badge:'TEXT' },
+    { id:'post_pov',     section:'post', tag:'post', icon:'🎭', title:'Пост: POV', desc:'Коротко, дерзко, цепляет', preview:'POV:', needs:'text', hint:'Лучше всего с кружком/эмодзи.', badge:'TEXT' },
+    { id:'post_old',     section:'post', tag:'post', icon:'💎', title:'Пост: OLD MONEY', desc:'Тихая роскошь', preview:'💎', needs:'text', hint:'Идеально с Live Avatar/16:9.', badge:'TEXT' },
+    { id:'post_mix',     section:'post', tag:'post', icon:'🧪', title:'Микс 2 стилей', desc:'Смешаем два стиля', preview:'A+B', needs:'text', hint:'Выберешь два — соберём.', badge:'PRO' },
+    { id:'pack_boost',   section:'post', tag:'post', icon:'⚡', title:'Boost Pack', desc:'Кружок + пост + 1 эмодзи', preview:'◯+✍️+🧩', needs:'video', hint:'Сразу “первый заход” + удержание.', badge:'PACK' },
+    { id:'pack_creator', section:'post', tag:'post', icon:'🚀', title:'Creator Pack', desc:'9:16 + обложка + пост', preview:'📱+🖼+✍️', needs:'video', hint:'Самый сильный старт.', badge:'PACK' },
   ];
 
-  // --- Render cards ---
-  const grids = {
-    video: document.getElementById('gridVideo'),
-    grid: document.getElementById('gridGrid'),
-    collage: document.getElementById('gridCollage'),
-    post: document.getElementById('gridPost'),
-  };
+  const GAMES = [
+    { id:'game_roulette', section:'games', tag:'games', icon:'🎰', title:'Рулетка VIP', desc:'Поймай бонус (есть ZERO)', preview:'🎰', needs:'none', hint:'Бот крутит — выдаёт приз/промо.', badge:'HOT' },
+    { id:'game_trend',    section:'games', tag:'games', icon:'⚡', title:'Тренд-миссия', desc:'Мини-челлендж на актив', preview:'🔥', needs:'none', hint:'Выполнил → бонус.', badge:'HYPE' },
+  ];
 
-  function badgeLabel(x){
-    if(!x) return '';
-    const map = {
-      top:'TOP',
-      pro:'PRO',
-      viral:'VIRAL',
-      style:'STYLE',
-      pack:'PACK',
-      fun:'FUN',
-      smart:'SMART',
-    };
-    return map[x] || x.toUpperCase();
-  }
+  const HALL = [
+    { id:'hall_top', section:'hall', tag:'hall', icon:'🏆', title:'Топ активных', desc:'день / неделя / месяц', preview:'TOP10', needs:'none', hint:'Бот покажет рейтинг.', badge:'LIVE' },
+  ];
+
+  const PROMO = [
+    { id:'promo_admin_vip', section:'promo', tag:'promo', icon:'👑', title:'Выдать VIP', desc:'день / месяц / навсегда', preview:'VIP', needs:'admin', hint:'Только для разработчика.', badge:'ADMIN' },
+    { id:'promo_ticket', section:'promo', tag:'promo', icon:'🎟', title:'Билет-таймер', desc:'акция для новичков 24ч', preview:'24h', needs:'admin', hint:'Ты включаешь когда хочешь.', badge:'ADMIN' },
+    { id:'promo_draw', section:'promo', tag:'promo', icon:'🎁', title:'Розыгрыш (рандом)', desc:'1/3/5 дней VIP', preview:'1|3|5', needs:'admin', hint:'Считать вступивших и выбрать.', badge:'ADMIN' },
+  ];
+
+  function badgeLabel(x){ return x || ''; }
 
   function makeCard(m){
     const el = document.createElement('div');
     el.className = 'card';
-    el.dataset.id = m.id;
     el.dataset.section = m.section;
-    el.dataset.tag = m.tag.toLowerCase();
+    el.dataset.tag = (m.tag || '').toLowerCase();
     el.dataset.title = (m.title + ' ' + m.desc).toLowerCase();
 
     el.innerHTML = `
       <div class="row">
         <div class="ico">${m.icon}</div>
-        <div class="badge">${badgeLabel(m.badge) || m.tag}</div>
+        <div class="badge">${badgeLabel(m.badge)}</div>
       </div>
       <div>
         <h3>${m.title}</h3>
         <p>${m.desc}</p>
       </div>
       <div class="mini">
-        <span>${m.needs === 'video' ? '🎬 Видео' : m.needs === 'photos' ? '🖼 Фото' : '✍️ Текст'}</span>
+        <span>${m.needs === 'video' ? '🎬 Видео' : m.needs === 'photos' ? '🖼 Фото' : m.needs === 'text' ? '✍️ Текст' : '✨'}</span>
         <code>${m.preview}</code>
       </div>
     `;
-    el.addEventListener('click', ()=> openModal(m));
+    el.addEventListener('click', () => openModal(m));
     return el;
   }
 
+  const grids = {
+    video: document.getElementById('gridVideo'),
+    grid: document.getElementById('gridGrid'),
+    collage: document.getElementById('gridCollage'),
+    post: document.getElementById('gridPost'),
+    games: document.getElementById('gridGames'),
+    hall: document.getElementById('gridHall'),
+    promo: document.getElementById('gridPromo'),
+  };
+
   function renderAll(){
-    for(const k in grids) grids[k].innerHTML = '';
-    let counts = {video:0, grid:0, collage:0, post:0};
-    MODES.forEach(m=>{
-      if(grids[m.section]){
-        grids[m.section].appendChild(makeCard(m));
-        counts[m.section]++;
-      }
+    Object.values(grids).forEach(g => g.innerHTML = '');
+    MODES.forEach(m => grids[m.section].appendChild(makeCard(m)));
+    GAMES.forEach(m => grids[m.section].appendChild(makeCard(m)));
+    HALL.forEach(m => grids[m.section].appendChild(makeCard(m)));
+    PROMO.forEach(m => grids[m.section].appendChild(makeCard(m)));
+  }
+
+  // --- Accordion toggle ---
+  document.querySelectorAll('.section').forEach(sec => {
+    const btn = sec.querySelector('.section-toggle');
+    btn.addEventListener('click', () => {
+      sec.classList.toggle('open');
+      haptic('light');
     });
-    document.getElementById('countVideo').textContent = counts.video + ' режимов';
-    document.getElementById('countGrid').textContent = counts.grid + ' режимов';
-    document.getElementById('countCollage').textContent = counts.collage + ' режимов';
-    document.getElementById('countPost').textContent = counts.post + ' режимов';
-  }
+  });
 
-  // --- Filter/search ---
-  const q = document.getElementById('q');
-  const chipAll = document.getElementById('chipAll');
-  const chipVideo = document.getElementById('chipVideo');
-  const chipGrid = document.getElementById('chipGrid');
-  const chipPost = document.getElementById('chipPost');
+  // --- Chips filter ---
   let chip = 'all';
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      chip = c.dataset.chip;
+      applyFilter();
+      haptic('light');
+    });
+  });
 
-  function setChip(which){
-    chip = which;
-    [chipAll, chipVideo, chipGrid, chipPost].forEach(c=>c.classList.remove('active'));
-    if(which==='all') chipAll.classList.add('active');
-    if(which==='video') chipVideo.classList.add('active');
-    if(which==='grid') chipGrid.classList.add('active');
-    if(which==='post') chipPost.classList.add('active');
-    applyFilter();
-    haptic('light');
-  }
-  chipAll.onclick = ()=> setChip('all');
-  chipVideo.onclick = ()=> setChip('video');
-  chipGrid.onclick = ()=> setChip('grid');
-  chipPost.onclick = ()=> setChip('post');
-
+  const q = document.getElementById('q');
   q.addEventListener('input', applyFilter);
 
   function applyFilter(){
     const term = (q.value || '').trim().toLowerCase();
     const cards = document.querySelectorAll('.card');
-    cards.forEach(c=>{
-      const section = c.dataset.section;
-      const hay = c.dataset.title || '';
-      const tag = c.dataset.tag || '';
+
+    cards.forEach(card => {
+      const sec = card.dataset.section;
+      const hay = card.dataset.title || '';
+      const tag = card.dataset.tag || '';
       let ok = true;
 
-      if(chip==='video') ok = section==='video';
-      if(chip==='grid') ok = section==='grid';
-      if(chip==='post') ok = section==='post';
-
+      if(chip !== 'all'){
+        ok = (sec === chip) || (tag === chip);
+      }
       if(ok && term){
         ok = hay.includes(term) || tag.includes(term);
       }
-      c.style.display = ok ? '' : 'none';
+      card.style.display = ok ? '' : 'none';
     });
 
-    // hide empty sections
-    document.querySelectorAll('.section').forEach(sec=>{
+    // hide empty sections & auto-open sections with hits when searching
+    document.querySelectorAll('.section').forEach(sec => {
       const visible = sec.querySelectorAll('.card:not([style*="display: none"])').length;
       sec.style.display = visible ? '' : 'none';
+
+      if(term && visible){
+        sec.classList.add('open');
+      }
     });
   }
 
-  // --- Modal logic ---
+  // --- Modal ---
   const modal = document.getElementById('modal');
   const mTitle = document.getElementById('mTitle');
-  const mDesc = document.getElementById('mDesc');
-  const mHint = document.getElementById('mHint');
-  const mGo = document.getElementById('mGo');
-  const mStay = document.getElementById('mStay');
-  const mX = document.getElementById('mX');
+  const mDesc  = document.getElementById('mDesc');
+  const mHint  = document.getElementById('mHint');
+  const mX     = document.getElementById('mX');
+  const mGo    = document.getElementById('mGo');
+  const mStay  = document.getElementById('mStay');
   let current = null;
 
   function openModal(m){
@@ -828,19 +887,19 @@
     mTitle.textContent = m.title;
     mDesc.textContent = m.desc;
 
-    const needsText = m.needs === 'video'
-      ? 'Нужно: <b>1 видео</b>. После выбора режима вернись в чат и отправь видео сообщением.'
-      : m.needs === 'photos'
-      ? 'Нужно: <b>несколько фото</b> (2–9). Отправляй альбомом в чат, потом нажми “Готово”.'
-      : 'Нужно: <b>текст</b>. Можно сразу написать — я оформлю стилем.';
+    const needText =
+      m.needs === 'video'  ? 'Нужно: <b>1 видео</b> (в чате боту).' :
+      m.needs === 'photos' ? 'Нужно: <b>2–9 фото</b> (альбомом в чат).' :
+      m.needs === 'text'   ? 'Нужно: <b>текст</b> (в чате боту).' :
+      m.needs === 'admin'  ? 'Нужно: <b>админ-доступ</b> (в чате боту).' :
+                             'Ничего не нужно — просто нажми выбрать.';
 
-    const quality = m.needs === 'video'
-      ? '<br/><br/><b>Совет:</b> отправляй как <b>Документ</b>, если хочешь максимальное качество.'
-      : '';
-
-    const template = `<b>Превью-шаблон:</b> <code>${m.preview}</code><br/><br/>${needsText}${quality}<br/><br/><b>Подсказка:</b> ${m.hint}`;
-
-    mHint.innerHTML = template;
+    mHint.innerHTML = `
+      <b>Превью:</b> <code>${m.preview}</code><br/><br/>
+      ${needText}<br/><br/>
+      <b>Подсказка:</b> ${m.hint}<br/><br/>
+      <b>Back:</b> если передумал — бот покажет кнопку “Назад”.
+    `;
 
     modal.classList.add('show');
     haptic('medium');
@@ -852,106 +911,67 @@
   }
 
   mX.onclick = closeModal;
-  modal.addEventListener('click', (e)=>{
-    if(e.target === modal) closeModal();
-  });
+  mStay.onclick = () => { haptic('light'); closeModal(); };
+  modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
 
-  mStay.onclick = ()=>{
-    haptic('light');
-    closeModal();
-  };
-
-  mGo.onclick = ()=>{
+  mGo.onclick = () => {
     if(!current) return;
     haptic('success');
 
-    // Payload for bot
+    // универсальный payload в бота
     const payload = {
       type: 'pick_mode',
       mode: current.id,
+      section: current.section,
       title: current.title,
       needs: current.needs
     };
 
-    const ok = sendPayload(payload);
+    sendPayload(payload);
+    toast(BOT_BACK_HINT);
 
-    // UX: show instruction and close
-    if(ok){
-      if(tg && tg.showPopup){
-        try{
-          tg.showPopup({
-            title: 'Режим выбран ✅',
-            message: 'Вернись в чат и отправь медиа. Бот начнёт обработку и предложит “ещё” пакеты.',
-            buttons: [{type:'ok'}]
-          }, ()=>{
-            try{ tg.close(); }catch(e){}
-          });
-        }catch(e){
-          toast('Режим выбран. Вернись в чат и отправь медиа.');
-          try{ tg.close(); }catch(ex){}
-        }
-      } else {
-        toast('Режим выбран. Вернись в чат и отправь медиа.');
-      }
+    // закрываем WebApp, чтобы юзер видел чат
+    if(tg){
+      try{ tg.close(); }catch(e){}
     }
     closeModal();
   };
 
-  // --- Hero actions ---
-  document.getElementById('btnHow').onclick = ()=>{
-    haptic('light');
-    const msg = [
-      'Как работает CADRHUB:',
-      '1) Выбираешь режим здесь (Poster-menu)',
-      '2) Возвращаешься в чат и отправляешь видео/фото',
-      '3) Получаешь результат + кнопки “усилить” (пакеты/пост/сетку)'
-    ].join('\n');
-    if(tg && tg.showPopup){
-      tg.showPopup({title:'3 шага', message: msg, buttons:[{type:'ok'}]});
-    } else toast('3 шага: выбери → отправь в чат → получи + усилить');
-  };
-
-  document.getElementById('btnSendHelp').onclick = ()=>{
-    haptic('light');
-    const msg = [
-      'Как отправлять видео:',
-      '• В чат боту отправь видео.',
-      '• Для качества: отправляй как Документ (файл).',
-      '• Если не проходит по размеру — укороти/сожми (или PRO).'
-    ].join('\n');
-    if(tg && tg.showPopup){
-      tg.showPopup({title:'📎 Отправка', message: msg, buttons:[{type:'ok'}]});
-    } else toast('Совет: видео лучше как Документ для качества');
-  };
-
-  document.getElementById('btnCatalog').onclick = ()=>{
-    haptic('light');
-    q.value = '';
-    setChip('all');
-    window.scrollTo({top: document.getElementById('content').offsetTop - 60, behavior:'smooth'});
-  };
-
   // --- Topbar buttons ---
-  document.getElementById('btnClose').onclick = ()=>{
+  document.getElementById('btnClose').onclick = () => {
     haptic('light');
     if(tg) { try{ tg.close(); }catch(e){} }
     else toast('Закрыть можно только внутри Telegram');
   };
 
-  document.getElementById('btnStatus').onclick = ()=>{
+  document.getElementById('btnStatus').onclick = () => {
     haptic('light');
-    if(tg){
-      toast('Telegram WebApp активен ✅');
-    } else {
-      toast('Открыто в браузере (sendData не отправится)');
-    }
+    toast(tg ? 'Telegram WebApp активен ✅' : 'Открыто в браузере (sendData не отправится)');
+  };
+
+  // --- Hero actions ---
+  document.getElementById('btnHow').onclick = () => {
+    haptic('light');
+    const msg = [
+      'CADRHUB: как не путаться',
+      '1) Выбираешь режим в мини-апп',
+      '2) Возвращаешься в чат и отправляешь медиа',
+      '3) Получаешь результат + “ещё” пакеты',
+    ].join('\\n');
+    if(tg && tg.showPopup) tg.showPopup({title:'3 шага', message: msg, buttons:[{type:'ok'}]});
+    else toast('Выбери режим → вернись в чат → отправь медиа');
+  };
+
+  document.getElementById('btnBackToChat').onclick = () => {
+    haptic('light');
+    if(tg) { try{ tg.close(); }catch(e){} }
+    else toast('Это кнопка для Telegram');
   };
 
   // init
   setStatus();
   renderAll();
   applyFilter();
-
 })();
 </script>
 </body>
