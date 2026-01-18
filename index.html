@@ -1,356 +1,472 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CADRHUB • Admin Terminal</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <style>
-        :root {
-            --bg: #050505;
-            --card: rgba(20, 20, 35, 0.8);
-            --accent: #00f3ff; /* Основной неон (Голубой) */
-            --warning: #bc13fe; /* Вторичный (Фиолетовый) */
-            --text: #ffffff;
-            --border: 1px solid rgba(255, 255, 255, 0.15);
-        }
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>CADRHUB Studio</title>
+  <style>
+    :root{
+      --bg:#070914;
+      --panel:rgba(16,18,35,.72);
+      --stroke:rgba(255,255,255,.10);
+      --text:#E9F0FF;
+      --muted:rgba(233,240,255,.65);
+      --neon:#7DF9FF;
+      --pink:#FF2BD6;
+      --lime:#B8FF5A;
+      --warn:#FFB86B;
+      --radius:18px;
+      --shadow:0 18px 60px rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 80% -10%, rgba(125,249,255,.18), transparent 55%),
+        radial-gradient(1000px 700px at 0% 10%, rgba(255,43,214,.14), transparent 55%),
+        radial-gradient(900px 700px at 40% 120%, rgba(184,255,90,.10), transparent 55%),
+        linear-gradient(180deg, #060815, #070914 60%, #050614);
+      overflow-x:hidden;
+    }
+    .bg-grid:before{
+      content:"";
+      position:fixed; inset:0;
+      background-image:
+        linear-gradient(to right, rgba(125,249,255,.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(125,249,255,.04) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.9), transparent 70%);
+      pointer-events:none;
+      opacity:.45;
+    }
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:16px 14px 28px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:8px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(125,249,255,.9), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(255,43,214,.9), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      box-shadow: 0 0 0 1px rgba(125,249,255,.08) inset, 0 0 22px rgba(125,249,255,.18);
+      position:relative;
+      overflow:hidden;
+      cursor:pointer;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-60%;
+      background:conic-gradient(from 200deg, transparent 0 55%, rgba(125,249,255,.35), transparent 80%);
+      animation:spin 6s linear infinite;
+      opacity:.9;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brand h1{
+      font-size:18px; margin:0; letter-spacing:.6px;
+    }
+    .brand small{display:block; color:var(--muted); margin-top:2px; font-size:12px}
+    .badge{
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(16,18,35,.55);
+      box-shadow:0 0 22px rgba(255,43,214,.10);
+      white-space:nowrap;
+    }
 
-        body {
-            background-color: var(--bg);
-            background-image: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%);
-            color: var(--text);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-bottom: 80px; /* Место под кнопку */
-        }
+    .ticker{
+      margin:14px 0 10px;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(16,18,35,.55);
+      box-shadow: var(--shadow);
+      position:relative;
+    }
+    .ticker .track{
+      display:flex;
+      gap:34px;
+      padding:10px 0;
+      will-change:transform;
+      animation:ticker 18s linear infinite;
+    }
+    .ticker span{
+      white-space:nowrap;
+      color:rgba(233,240,255,.85);
+      text-shadow:0 0 18px rgba(125,249,255,.18);
+      font-size:13px;
+    }
+    @keyframes ticker{
+      0%{transform:translateX(0)}
+      100%{transform:translateX(-50%)}
+    }
 
-        /* === ТИКЕР (СИСТЕМНЫЙ СТАТУС) === */
-        .system-status {
-            background: rgba(0,0,0,0.9);
-            border-bottom: 1px solid var(--accent);
-            padding: 8px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            display: flex;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-        }
+    .hint{
+      margin:10px 0 14px;
+      padding:12px 14px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(16,18,35,.50);
+      color:rgba(233,240,255,.75);
+      font-size:13px;
+      line-height:1.35;
+    }
 
-        /* === КОНТЕЙНЕР === */
-        .container {
-            padding: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media (min-width:740px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
 
-        /* === КАРТОЧКИ === */
-        .panel {
-            background: var(--card);
-            border: var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
+    details{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(16,18,35,.52);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:14px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:650;
+    }
+    summary::-webkit-details-marker{display:none}
+    .chip{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      color:rgba(233,240,255,.8);
+      background:rgba(0,0,0,.12);
+    }
+    .panel{
+      padding:0 14px 14px;
+      display:grid;
+      gap:10px;
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.20);
+      border-radius:16px;
+      padding:12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .icon{
+      width:44px;height:44px;border-radius:14px;
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(125,249,255,.22), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(255,43,214,.20), transparent 60%),
+        rgba(16,18,35,.45);
+      flex:0 0 auto;
+      font-size:20px;
+    }
+    .card h3{
+      margin:0;
+      font-size:14px;
+    }
+    .card p{
+      margin:6px 0 0;
+      font-size:12.5px;
+      color:rgba(233,240,255,.70);
+      line-height:1.35;
+    }
+    .btnrow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(16,18,35,.55);
+      color:var(--text);
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:650;
+      font-size:12.5px;
+      box-shadow:0 0 0 1px rgba(125,249,255,.07) inset;
+    }
+    .btn.primary{
+      border-color:rgba(125,249,255,.30);
+      box-shadow:0 0 26px rgba(125,249,255,.15);
+    }
+    .btn.pink{
+      border-color:rgba(255,43,214,.32);
+      box-shadow:0 0 26px rgba(255,43,214,.15);
+    }
+    .preview{
+      margin-top:8px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.25);
+    }
+    .tgpost{
+      padding:12px 12px 10px;
+    }
+    .tghead{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .avatar{
+      width:34px;height:34px;border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(125,249,255,.8), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(255,43,214,.8), transparent 60%),
+        rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .meta b{font-size:13px}
+    .meta div{font-size:11.5px;color:rgba(233,240,255,.60); margin-top:2px}
+    .media{
+      height:120px;
+      border-radius:14px;
+      border:1px dashed rgba(255,255,255,.14);
+      background:
+        linear-gradient(135deg, rgba(125,249,255,.12), transparent 60%),
+        linear-gradient(225deg, rgba(255,43,214,.12), transparent 60%),
+        rgba(0,0,0,.20);
+      display:grid;
+      place-items:center;
+      color:rgba(233,240,255,.65);
+      font-size:12px;
+      margin:10px 0;
+    }
+    .tgtxt{
+      font-size:13px;
+      line-height:1.35;
+      color:rgba(233,240,255,.86);
+    }
+    .tgtxt .b{font-weight:800}
+    .tgtxt .i{font-style:italic}
+    .tgtxt .m{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; opacity:.95}
+    .tgtags{
+      margin-top:8px;
+      font-size:12px;
+      color:rgba(125,249,255,.85);
+    }
 
-        .panel-header {
-            font-size: 12px;
-            color: var(--warning);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* === ВВОД ТЕКСТА === */
-        textarea {
-            width: 100%;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 15px;
-            resize: none;
-            outline: none;
-            box-sizing: border-box;
-            min-height: 120px;
-            font-family: inherit;
-        }
-        textarea:focus { border-color: var(--accent); }
-
-        /* === КНОПКИ (URL) === */
-        .btn-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .input-dark {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            flex: 1;
-            font-size: 13px;
-            outline: none;
-        }
-        .input-dark:focus { border-color: var(--accent); }
-        
-        .add-btn {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px dashed rgba(255,255,255,0.3);
-            color: var(--text);
-            padding: 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* === МЕДИА ТИПЫ === */
-        .media-selector {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .media-option {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid transparent;
-            border-radius: 8px;
-            padding: 10px 0;
-            text-align: center;
-            font-size: 10px;
-            color: #aaa;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .media-option.active {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(0, 243, 255, 0.1);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-        }
-
-        /* === ЧЕКБОКСЫ === */
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-        /* Кастомный свитч */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #333;
-            transition: .4s;
-            border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px;
-            width: 14px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--accent); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* === ГЛАВНАЯ КНОПКА === */
-        .main-btn {
-            position: fixed;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            background: var(--accent);
-            color: #000;
-            font-weight: 900;
-            text-transform: uppercase;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
-            cursor: pointer;
-            z-index: 100;
-        }
-        .main-btn:active { transform: scale(0.98); }
-    </style>
+    footer{
+      margin-top:16px;
+      color:rgba(233,240,255,.55);
+      font-size:12px;
+      text-align:center;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-grid">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" id="logo" title="Открыть канал/обсуждения"></div>
+        <div>
+          <h1>CADRHUB</h1>
+          <small>Bangkok Cyberdeck • Space Station UI</small>
+        </div>
+      </div>
+      <div class="badge">🛰️ online • v2177</div>
+    </header>
 
-    <div class="system-status">
-        <span><i data-lucide="shield-check" width="12"></i> SYSTEM: ONLINE</span>
-        <span id="userId">USER: ADMIN</span>
+    <div class="ticker" title="Бегущая строка (управляется админом)">
+      <div class="track" id="tickerTrack">
+        <span>🚀 CADRHUB: скоро акция! 🎁 Подпишись и лови VIP 🎫</span>
+        <span>🤖 Telegram любит кружки. CADRHUB делает их красивыми 😄</span>
+        <span>⚡ Контент за 30 секунд — пока другие думают</span>
+        <span>🧩 Сетки • 🎬 Видео • ✍️ Посты — всё в одном</span>
+        <span>🚀 CADRHUB: скоро акция! 🎁 Подпишись и лови VIP 🎫</span>
+        <span>🤖 Telegram любит кружки. CADRHUB делает их красивыми 😄</span>
+        <span>⚡ Контент за 30 секунд — пока другие думают</span>
+        <span>🧩 Сетки • 🎬 Видео • ✍️ Посты — всё в одном</span>
+      </div>
     </div>
 
-    <div class="container">
-        
+    <div class="hint">
+      👇 Это витрина. Ты выбираешь, как будет выглядеть результат и пост в Telegram.
+      Управление обработкой — через бота. Скоро добавим предпросмотр “как в Telegram” с твоим видео.
+    </div>
+
+    <div class="grid">
+
+      <details open>
+        <summary>✍️ Посты и стили <span class="chip">6</span></summary>
         <div class="panel">
-            <div class="panel-header"><i data-lucide="file-text" width="14"></i> Редактор Поста</div>
-            <textarea id="postText" placeholder="Введите текст поста... (Markdown поддерживается)"></textarea>
-        </div>
+          <div class="card">
+            <div class="icon">⚡</div>
+            <div>
+              <h3>Хайповый стиль</h3>
+              <p>Коротко, дерзко, как “взорвали ленту”.</p>
+              <div class="preview">
+                <div class="tgpost">
+                  <div class="tghead">
+                    <div class="avatar"></div>
+                    <div class="meta"><b>CADRHUB</b><div>сейчас • Telegram post preview</div></div>
+                  </div>
+                  <div class="media">🎬 тут будет твой результат (видео/кадр)</div>
+                  <div class="tgtxt">
+                    <span class="b">Мы</span> не делаем контент “как у всех”.<br/>
+                    Мы делаем <span class="b">шум 2222%</span>.<br/><br/>
+                    <span class="i">Жми режим → загрузи → получи магию.</span>
+                  </div>
+                  <div class="tgtags">#cadrhub #telegram #content</div>
+                </div>
+              </div>
+              <div class="btnrow">
+                <button class="btn primary" data-cmd="/poststyles">Открыть стили в боте</button>
+                <button class="btn" data-cmd="/modes">Выбрать режим</button>
+              </div>
+            </div>
+          </div>
 
+          <div class="card">
+            <div class="icon">💎</div>
+            <div>
+              <h3>Old Money</h3>
+              <p>Минимализм, “дорогой” тон, без суеты.</p>
+              <div class="preview">
+                <div class="tgpost">
+                  <div class="tghead">
+                    <div class="avatar"></div>
+                    <div class="meta"><b>CADRHUB</b><div>сейчас • Telegram post preview</div></div>
+                  </div>
+                  <div class="media">📎 медиа-блок</div>
+                  <div class="tgtxt">
+                    <span class="b">Тишина</span> — тоже стиль.<br/>
+                    Ровные кадры. Чистый текст.<br/><br/>
+                    <span class="m">/modes</span> → выбираешь формат → получаешь результат.
+                  </div>
+                </div>
+              </div>
+              <div class="btnrow">
+                <button class="btn primary" data-cmd="/poststyles">Стили</button>
+                <button class="btn pink" data-cmd="/vip">VIP</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>🧩 Коллажи <span class="chip">3</span></summary>
         <div class="panel">
-            <div class="panel-header"><i data-lucide="image" width="14"></i> Тип вложения</div>
-            <div class="media-selector" id="mediaType">
-                <div class="media-option active" onclick="selectMedia('none')">
-                    <i data-lucide="x" width="20"></i><br>Нет
-                </div>
-                <div class="media-option" onclick="selectMedia('photo')">
-                    <i data-lucide="camera" width="20"></i><br>Фото
-                </div>
-                <div class="media-option" onclick="selectMedia('video')">
-                    <i data-lucide="video" width="20"></i><br>Видео
-                </div>
-                <div class="media-option" onclick="selectMedia('circle')">
-                    <i data-lucide="circle-dot" width="20"></i><br>Кружок
-                </div>
+          <div class="card">
+            <div class="icon">🧩</div>
+            <div>
+              <h3>Коллаж-постер</h3>
+              <p>Собираем “афишу” из кадров — выглядит как готовый пост.</p>
+              <div class="btnrow">
+                <button class="btn primary" data-cmd="/modes">Открыть режимы</button>
+              </div>
             </div>
-            <div id="fileUploadInfo" style="margin-top:10px; font-size:12px; color:#aaa; display:none;">
-                ⚠️ Медиа-файл нужно будет отправить боту следующим сообщением после нажатия кнопки "Создать".
-            </div>
+          </div>
         </div>
+      </details>
 
+      <details>
+        <summary>😀 Сетки эмодзи-видео <span class="chip">3</span></summary>
         <div class="panel">
-            <div class="panel-header"><i data-lucide="mouse-pointer-2" width="14"></i> URL-Кнопки</div>
-            <div id="buttonsContainer">
-                </div>
-            <button class="add-btn" onclick="addButtonRow()">+ Добавить ряд кнопок</button>
+          <div class="card">
+            <div class="icon">😀</div>
+            <div>
+              <h3>20×1 лента (sticker-line)</h3>
+              <p>Панорама из секций — разные кадры, не один и тот же кусок.</p>
+              <div class="btnrow">
+                <button class="btn primary" data-cmd="/modes">Открыть режимы</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </details>
 
+      <details>
+        <summary>🎬 Из видео <span class="chip">7</span></summary>
         <div class="panel">
-            <div class="panel-header"><i data-lucide="settings" width="14"></i> Параметры публикации</div>
-            
-            <div class="setting-row">
-                <span>🔔 Отправить тихо (Silent)</span>
-                <label class="switch">
-                    <input type="checkbox" id="silentCheck">
-                    <span class="slider"></span>
-                </label>
+          <div class="card">
+            <div class="icon">🔵</div>
+            <div>
+              <h3>Circle (кружок)</h3>
+              <p>Формат видеосообщения — идеально для каналов/чатов.</p>
+              <div class="btnrow">
+                <button class="btn primary" data-cmd="/modes">Выбрать</button>
+              </div>
             </div>
-
-            <div class="setting-row">
-                <span>📌 Закрепить в канале</span>
-                <label class="switch">
-                    <input type="checkbox" id="pinCheck">
-                    <span class="slider"></span>
-                </label>
+          </div>
+          <div class="card">
+            <div class="icon">📱</div>
+            <div>
+              <h3>9:16</h3>
+              <p>Stories/Reels вертикалка.</p>
             </div>
-
-            <div class="setting-row">
-                <span>💧 Добавить водяной знак (VIP)</span>
-                <label class="switch">
-                    <input type="checkbox" id="watermarkCheck" checked>
-                    <span class="slider"></span>
-                </label>
+          </div>
+          <div class="card">
+            <div class="icon">🖥</div>
+            <div>
+              <h3>16:9</h3>
+              <p>Широкий формат: YouTube/превью.</p>
             </div>
+          </div>
         </div>
+      </details>
 
     </div>
 
-    <button class="main-btn" onclick="sendToBot()">
-        СОЗДАТЬ ПОСТ
-    </button>
+    <footer>© CADRHUB • сделано, чтобы Telegram выглядел дороже 😈</footer>
+  </div>
 
-    <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-        lucide.createIcons();
+  <script>
+    // Telegram WebApp API (если открыт внутри Telegram)
+    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+    if (tg) tg.expand();
 
-        // Установка цветов темы
-        tg.setHeaderColor('#050505');
-        tg.setBackgroundColor('#050505');
+    // Кликабельный логотип — пока просто “пинг” в бота
+    document.getElementById("logo").addEventListener("click", () => {
+      if (!tg) return alert("Открой это внутри Telegram, и логотип будет вести в канал/обсуждения.");
+      tg.showAlert("Сюда потом вставим ссылку на канал/обсуждения 🚀");
+    });
 
-        let currentMediaType = 'none';
-
-        function selectMedia(type) {
-            currentMediaType = type;
-            document.querySelectorAll('.media-option').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            const info = document.getElementById('fileUploadInfo');
-            info.style.display = type === 'none' ? 'none' : 'block';
-        }
-
-        function addButtonRow() {
-            const container = document.getElementById('buttonsContainer');
-            const div = document.createElement('div');
-            div.className = 'btn-row';
-            div.innerHTML = `
-                <input type="text" class="input-dark btn-text" placeholder="Текст кнопки">
-                <input type="text" class="input-dark btn-url" placeholder="https://...">
-                <div style="padding:10px; color:#ff4444;" onclick="this.parentElement.remove()">
-                    <i data-lucide="trash" width="16"></i>
-                </div>
-            `;
-            container.appendChild(div);
-            lucide.createIcons();
-        }
-
-        function sendToBot() {
-            const text = document.getElementById('postText').value;
-            
-            if (!text && currentMediaType === 'none') {
-                tg.showPopup({ title: 'Ошибка', message: 'Пост не может быть пустым!' });
-                return;
-            }
-
-            // Сбор кнопок
-            let buttons = [];
-            document.querySelectorAll('.btn-row').forEach(row => {
-                let txt = row.querySelector('.btn-text').value;
-                let url = row.querySelector('.btn-url').value;
-                if(txt && url) buttons.push({text: txt, url: url});
-            });
-
-            // Формирование JSON для твоего python-telegram-bot
-            const payload = {
-                action: "create_post", // Твой бот должен ловить этот action
-                text: text,
-                media_type: currentMediaType,
-                buttons: buttons,
-                settings: {
-                    silent: document.getElementById('silentCheck').checked,
-                    pin: document.getElementById('pinCheck').checked,
-                    watermark: document.getElementById('watermarkCheck').checked
-                }
-            };
-
-            // Отправка данных боту
-            tg.sendData(JSON.stringify(payload));
-        }
-
-        // Показать юзернейм
-        if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('userId').innerText = 
-                "OPERATOR: " + tg.initDataUnsafe.user.first_name.toUpperCase();
-        }
-    </script>
+    // Кнопки — отправляют команду в чат (через WebAppData)
+    for (const btn of document.querySelectorAll("[data-cmd]")) {
+      btn.addEventListener("click", () => {
+        const cmd = btn.getAttribute("data-cmd");
+        if (!tg) return alert("Открой внутри Telegram WebApp");
+        tg.sendData(JSON.stringify({ type:"nav", cmd }));
+        tg.showToast ? tg.showToast("Отправил в бот: " + cmd) : null;
+      });
+    }
+  </script>
 </body>
 </html>
