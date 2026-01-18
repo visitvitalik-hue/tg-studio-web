@@ -1,1312 +1,356 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0b0014" />
-  <title>CADRHUB • Bangkok Cyberpunk 2177</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CADRHUB • Admin Terminal</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --card: rgba(20, 20, 35, 0.8);
+            --accent: #00f3ff; /* Основной неон (Голубой) */
+            --warning: #bc13fe; /* Вторичный (Фиолетовый) */
+            --text: #ffffff;
+            --border: 1px solid rgba(255, 255, 255, 0.15);
+        }
 
-  <style>
-    :root{
-      --bg0:#07000f;
-      --bg1:#0b0014;
-      --bg2:#12001f;
-      --neonA:#00fff0;
-      --neonB:#ff2dff;
-      --neonC:#ffcc00;
-      --ink:#e9e1ff;
-      --mut:#b8a9ff;
-      --glass: rgba(255,255,255,.06);
-      --glass2: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.12);
-      --shadow: 0 18px 60px rgba(0,0,0,.6);
-      --radius: 22px;
-      --radius2: 14px;
-    }
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.1) 0%, transparent 50%);
+            color: var(--text);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px; /* Место под кнопку */
+        }
 
-    body{
-      margin:0;
-      color:var(--ink);
-      background: radial-gradient(1200px 800px at 10% 10%, #21003a 0%, transparent 55%),
-                  radial-gradient(1000px 700px at 90% 20%, #001b2f 0%, transparent 55%),
-                  radial-gradient(900px 700px at 50% 110%, #2a001c 0%, transparent 55%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1));
-      min-height:100svh;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      padding:
-        calc(env(safe-area-inset-top) + 14px)
-        calc(env(safe-area-inset-right) + 14px)
-        calc(env(safe-area-inset-bottom) + 14px)
-        calc(env(safe-area-inset-left) + 14px);
-      overflow-x:hidden;
-    }
+        /* === ТИКЕР (СИСТЕМНЫЙ СТАТУС) === */
+        .system-status {
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid var(--accent);
+            padding: 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
 
-    /* scanlines + noise */
-    .fx-scanlines::before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background: repeating-linear-gradient(to bottom,
-          rgba(255,255,255,.04),
-          rgba(255,255,255,.04) 1px,
-          rgba(0,0,0,0) 3px,
-          rgba(0,0,0,0) 6px
-      );
-      mix-blend-mode: overlay;
-      opacity:.28;
-      z-index: 2;
-    }
-    .fx-noise::after{
-      content:"";
-      position:fixed; inset:-40px;
-      pointer-events:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
-      opacity:.10;
-      z-index: 3;
-      mix-blend-mode: overlay;
-      animation: noiseMove 6s steps(10) infinite;
-    }
-    @keyframes noiseMove{
-      0%{ transform:translate3d(0,0,0) }
-      20%{ transform:translate3d(-3%,2%,0) }
-      40%{ transform:translate3d(2%,-2%,0) }
-      60%{ transform:translate3d(-2%,-1%,0) }
-      80%{ transform:translate3d(1%,2%,0) }
-      100%{ transform:translate3d(0,0,0) }
-    }
+        /* === КОНТЕЙНЕР === */
+        .container {
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    .wrap{ position:relative; z-index:5; max-width: 920px; margin:0 auto; }
+        /* === КАРТОЧКИ === */
+        .panel {
+            background: var(--card);
+            border: var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
 
-    /* top bar */
-    .top{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; margin-bottom: 12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      padding: 10px 14px;
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      cursor:pointer;
-      user-select:none;
-    }
-    .brand:active{ transform: translateY(1px); }
-    .logo{
-      width: 38px; height: 38px;
-      border-radius: 14px;
-      background:
-        radial-gradient(10px 10px at 30% 30%, rgba(255,255,255,.9), transparent 55%),
-        conic-gradient(from 210deg, var(--neonA), var(--neonB), var(--neonC), var(--neonA));
-      box-shadow:
-        0 0 22px rgba(0,255,240,.35),
-        0 0 36px rgba(255,45,255,.18);
-      position:relative;
-      overflow:hidden;
-    }
-    .logo::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
-      transform: rotate(20deg);
-      animation: shine 2.8s infinite;
-      opacity:.65;
-    }
-    @keyframes shine{
-      0%{ transform: translateX(-60%) rotate(20deg) }
-      55%{ transform: translateX(60%) rotate(20deg) }
-      100%{ transform: translateX(60%) rotate(20deg) }
-    }
-    .brandTitle{ display:flex; flex-direction:column; gap:2px; line-height:1.0; }
-    .brandTitle b{ font-size: 14px; letter-spacing:.12em; text-transform: uppercase; }
-    .brandTitle span{ font-size:12px; color: var(--mut); opacity:.9; }
+        .panel-header {
+            font-size: 12px;
+            color: var(--warning);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-    .chipRow{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-    .chip{
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.06);
-      border-radius: 999px;
-      padding: 9px 12px;
-      font-size: 12px;
-      color: var(--ink);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      backdrop-filter: blur(10px);
-      cursor:pointer;
-      user-select:none;
-      display:flex; align-items:center; gap:8px;
-    }
-    .chip:active{ transform: translateY(1px); }
-    .dot{
-      width:8px; height:8px; border-radius: 99px;
-      background: var(--neonA);
-      box-shadow: 0 0 14px rgba(0,255,240,.55);
-    }
-    .dot.pink{ background: var(--neonB); box-shadow: 0 0 14px rgba(255,45,255,.55); }
-    .dot.gold{ background: var(--neonC); box-shadow: 0 0 14px rgba(255,204,0,.55); }
+        /* === ВВОД ТЕКСТА === */
+        textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+            min-height: 120px;
+            font-family: inherit;
+        }
+        textarea:focus { border-color: var(--accent); }
 
-    /* ticker */
-    .ticker{
-      position:relative;
-      border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      border-radius: 999px;
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-      margin: 12px 0 14px;
-    }
-    .tickerInner{
-      display:flex;
-      white-space:nowrap;
-      gap: 44px;
-      padding: 10px 14px;
-      align-items:center;
-    }
-    .tickerBadge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 6px 10px;
-      border:1px solid rgba(0,255,240,.28);
-      background: rgba(0,255,240,.08);
-      border-radius: 999px;
-      font-size: 12px;
-      letter-spacing:.08em;
-      text-transform: uppercase;
-      color: var(--neonA);
-      box-shadow: 0 0 22px rgba(0,255,240,.16);
-      flex: 0 0 auto;
-    }
-    .marquee{
-      display:flex; gap: 44px;
-      animation: marquee 18s linear infinite;
-      will-change: transform;
-    }
-    @keyframes marquee{
-      0%{ transform: translateX(0) }
-      100%{ transform: translateX(-50%) }
-    }
-    .tickerText{
-      color: rgba(233,225,255,.92);
-      font-size: 13px;
-      text-shadow: 0 0 12px rgba(255,45,255,.12);
-    }
-    .tickerHint{ color: rgba(184,169,255,.75); font-size: 12px; margin-left: 8px; }
+        /* === КНОПКИ (URL) === */
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .input-dark {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            flex: 1;
+            font-size: 13px;
+            outline: none;
+        }
+        .input-dark:focus { border-color: var(--accent); }
+        
+        .add-btn {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px dashed rgba(255,255,255,0.3);
+            color: var(--text);
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
 
-    /* hero */
-    .hero{
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      position:relative;
-      overflow:hidden;
-    }
-    .hero::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(600px 220px at 10% 10%, rgba(0,255,240,.18), transparent 60%),
-        radial-gradient(600px 220px at 90% 10%, rgba(255,45,255,.16), transparent 60%),
-        radial-gradient(500px 300px at 50% 110%, rgba(255,204,0,.11), transparent 60%);
-      z-index:0;
-    }
-    .heroIn{
-      position:relative; z-index:1;
-      display:flex; gap: 14px; align-items:stretch; flex-wrap: wrap;
-    }
-    .preview{
-      flex: 1 1 320px;
-      min-height: 190px;
-      border-radius: var(--radius);
-      border:1px dashed rgba(255,255,255,.22);
-      background: rgba(0,0,0,.22);
-      position:relative;
-      overflow:hidden;
-    }
-    .previewCanvas{
-      position:absolute; inset:0;
-      background:
-        radial-gradient(140px 140px at 20% 40%, rgba(0,255,240,.18), transparent 55%),
-        radial-gradient(160px 160px at 80% 30%, rgba(255,45,255,.14), transparent 55%),
-        radial-gradient(200px 200px at 50% 110%, rgba(255,204,0,.12), transparent 55%),
-        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-    }
-    .previewOverlay{
-      position:absolute; inset:0;
-      display:flex; align-items:flex-end;
-      padding: 12px; gap:10px;
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.16);
-      font-size: 12px;
-      color: rgba(233,225,255,.95);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
+        /* === МЕДИА ТИПЫ === */
+        .media-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .media-option {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 10px;
+            color: #aaa;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .media-option.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
 
-    .heroRight{ flex: 1 1 280px; display:flex; flex-direction:column; gap: 10px; }
-    .h1{ margin:0; font-size: 18px; letter-spacing:.06em; text-transform: uppercase; }
-    .sub{ margin:0; font-size: 13px; color: rgba(184,169,255,.92); line-height: 1.35; }
-    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 6px; }
-    .btn{
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.08);
-      border-radius: 16px;
-      padding: 12px 12px;
-      color: var(--ink);
-      font-weight: 700;
-      font-size: 13px;
-      cursor:pointer;
-      user-select:none;
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-      backdrop-filter: blur(12px);
-      transition: transform .06s ease;
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btnPrimary{
-      border-color: rgba(0,255,240,.30);
-      background: linear-gradient(180deg, rgba(0,255,240,.14), rgba(255,45,255,.10));
-      box-shadow: 0 0 24px rgba(0,255,240,.10), 0 18px 60px rgba(0,0,0,.45);
-    }
-    .btnGhost{ background: rgba(0,0,0,.25); }
-    .kbd{
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.22);
-      color: rgba(233,225,255,.90);
-    }
+        /* === ЧЕКБОКСЫ === */
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        /* Кастомный свитч */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-    /* accordion */
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    details.card{
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      overflow:hidden;
-    }
-    details.card summary{
-      list-style:none;
-      cursor:pointer;
-      padding: 14px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      user-select:none;
-      outline:none;
-    }
-    details.card summary::-webkit-details-marker{ display:none; }
-    .sumLeft{ display:flex; align-items:center; gap:12px; min-width: 0; }
-    .icon{
-      width: 42px; height: 42px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(14px 14px at 28% 30%, rgba(255,255,255,.8), transparent 55%),
-        linear-gradient(135deg, rgba(0,255,240,.14), rgba(255,45,255,.10));
-      box-shadow: 0 0 26px rgba(255,45,255,.10);
-      flex: 0 0 auto;
-      position:relative;
-      overflow:hidden;
-    }
-    .icon::after{
-      content:"";
-      position:absolute; inset:-50%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
-      transform: rotate(20deg);
-      opacity:.40;
-      animation: shine 3.6s infinite;
-    }
-    .sumText{ min-width:0; display:flex; flex-direction:column; gap:2px; }
-    .sumText b{ font-size: 14px; letter-spacing:.06em; text-transform: uppercase; }
-    .sumText span{
-      font-size: 12px;
-      color: rgba(184,169,255,.90);
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 70vw;
-    }
-    .sumRight{ display:flex; align-items:center; gap:10px; flex: 0 0 auto; color: rgba(233,225,255,.80); font-size: 12px; }
-    .chev{
-      width: 10px; height: 10px;
-      border-right: 2px solid rgba(233,225,255,.65);
-      border-bottom: 2px solid rgba(233,225,255,.65);
-      transform: rotate(45deg);
-      transition: transform .12s ease;
-    }
-    details[open] .chev{ transform: rotate(225deg); }
-
-    .cardBody{
-      border-top: 1px solid rgba(255,255,255,.10);
-      padding: 12px 12px 14px;
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 10px;
-    }
-    @media (min-width: 760px){
-      .cardBody{ grid-template-columns: repeat(3, minmax(0,1fr)); }
-    }
-    .item{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      border-radius: var(--radius2);
-      padding: 12px;
-      cursor:pointer;
-      user-select:none;
-      position:relative;
-      overflow:hidden;
-      min-height: 104px;
-      transition: transform .08s ease;
-    }
-    .item:active{ transform: translateY(1px); }
-    .item::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(140px 80px at 10% 15%, rgba(0,255,240,.10), transparent 60%),
-        radial-gradient(140px 80px at 90% 20%, rgba(255,45,255,.09), transparent 60%);
-      opacity:.95; z-index:0;
-    }
-    .itemIn{ position:relative; z-index:1; display:flex; flex-direction:column; gap: 6px; }
-    .item b{ font-size: 13px; letter-spacing:.03em; text-transform: uppercase; }
-    .item span{ font-size: 12px; color: rgba(184,169,255,.90); line-height: 1.25; }
-    .tag{
-      align-self:flex-start;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: rgba(233,225,255,.9);
-    }
-
-    /* MODAL */
-    .modal{
-      position:fixed; inset:0;
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      background: rgba(0,0,0,.62);
-      z-index: 50;
-      padding:
-        calc(env(safe-area-inset-top) + 12px)
-        calc(env(safe-area-inset-right) + 12px)
-        calc(env(safe-area-inset-bottom) + 12px)
-        calc(env(safe-area-inset-left) + 12px);
-    }
-    .modal.show{ display:flex; }
-
-    .sheet{
-      width: min(920px, 100%);
-      border-radius: 26px;
-      border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(16,0,28,.90), rgba(0,0,0,.70));
-      box-shadow: 0 26px 80px rgba(0,0,0,.80);
-      backdrop-filter: blur(18px);
-      overflow:hidden;
-      transform: translateY(10px);
-      animation: pop .12s ease forwards;
-    }
-    @keyframes pop{ to{ transform: translateY(0); } }
-
-    .sheetTop{
-      padding: 12px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .sheetTop b{
-      font-size: 13px;
-      letter-spacing:.06em;
-      text-transform: uppercase;
-    }
-    .x{
-      width: 40px; height: 40px;
-      border-radius: 14px;
-      display:grid; place-items:center;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      cursor:pointer;
-      user-select:none;
-    }
-    .x:active{ transform: translateY(1px); }
-
-    .sheetBody{
-      padding: 14px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    /* --- TELEGRAM POST PREVIEW (realistic) --- */
-    .tgWrap{
-      border-radius: 22px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.28);
-      overflow:hidden;
-      position:relative;
-    }
-    .tgHeader{
-      display:flex; align-items:center; gap:10px;
-      padding: 12px 12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .tgAva{
-      width: 34px; height: 34px;
-      border-radius: 12px;
-      background:
-        radial-gradient(10px 10px at 30% 30%, rgba(255,255,255,.9), transparent 55%),
-        conic-gradient(from 210deg, var(--neonA), var(--neonB), var(--neonC), var(--neonA));
-      box-shadow: 0 0 18px rgba(0,255,240,.18);
-      flex: 0 0 auto;
-    }
-    .tgMeta{ display:flex; flex-direction:column; gap:2px; min-width:0; }
-    .tgName{
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing:.02em;
-      overflow:hidden;
-      white-space:nowrap;
-      text-overflow:ellipsis;
-    }
-    .tgTime{
-      font-size: 11px;
-      color: rgba(184,169,255,.80);
-    }
-    .tgBadge{
-      margin-left:auto;
-      font-size: 11px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      border:1px solid rgba(0,255,240,.25);
-      background: rgba(0,255,240,.08);
-      color: rgba(0,255,240,.95);
-      letter-spacing:.08em;
-      text-transform: uppercase;
-    }
-
-    .tgMedia{
-      position:relative;
-      background: rgba(255,255,255,.05);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-    /* aspect ratio set via classes */
-    .ar-9x16{ aspect-ratio: 9 / 16; }
-    .ar-16x9{ aspect-ratio: 16 / 9; }
-    .ar-1x1{ aspect-ratio: 1 / 1; }
-    .ar-4x5{ aspect-ratio: 4 / 5; }
-    .ar-circle{ aspect-ratio: 1 / 1; border-radius: 999px; margin: 12px auto; width: min(72%, 360px); border:1px solid rgba(255,255,255,.14); }
-
-    .tgMediaBg{
-      position:absolute; inset:-30%;
-      background: linear-gradient(135deg, rgba(0,255,240,.14), rgba(255,45,255,.12)),
-                  radial-gradient(280px 180px at 30% 30%, rgba(255,255,255,.12), transparent 60%),
-                  radial-gradient(320px 220px at 70% 30%, rgba(255,204,0,.10), transparent 60%),
-                  linear-gradient(135deg, rgba(0,0,0,.20), rgba(255,255,255,.05));
-      transform: rotate(10deg);
-      opacity:.9;
-    }
-    .tgMediaFx{
-      position:absolute; inset:0;
-      background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05), rgba(255,255,255,.05) 1px, rgba(0,0,0,0) 5px, rgba(0,0,0,0) 8px);
-      opacity:.22;
-      mix-blend-mode: overlay;
-      pointer-events:none;
-    }
-    .tgPlay{
-      position:absolute; inset:0;
-      display:grid; place-items:center;
-      pointer-events:none;
-    }
-    .tgPlayBtn{
-      width: 56px; height: 56px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 50px rgba(0,0,0,.55);
-      display:grid; place-items:center;
-      color: rgba(233,225,255,.95);
-      font-weight: 900;
-    }
-
-    .tgBody{ padding: 12px 12px 10px; }
-    .tgText{
-      font-size: 14px;
-      line-height: 1.35;
-      color: rgba(233,225,255,.96);
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .tgText b{ font-weight: 900; }
-    .tgText i{ opacity:.95; }
-
-    .tgFooter{
-      display:flex; gap:8px; flex-wrap:wrap;
-      padding: 10px 12px 12px;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-    .tgPill{
-      font-size: 11px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: rgba(233,225,255,.92);
-    }
-    .tgCta{
-      margin-left:auto;
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      border:1px solid rgba(0,255,240,.28);
-      background: linear-gradient(180deg, rgba(0,255,240,.14), rgba(255,45,255,.10));
-      color: rgba(233,225,255,.95);
-      font-weight: 900;
-      cursor:pointer;
-      user-select:none;
-      box-shadow: 0 0 18px rgba(0,255,240,.10);
-    }
-    .tgCta:active{ transform: translateY(1px); }
-
-    /* style chips inside modal */
-    .styleRow{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .sChip{
-      font-size: 11px;
-      padding: 7px 9px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.28);
-      color: rgba(233,225,255,.92);
-      cursor:pointer;
-      user-select:none;
-    }
-    .sChip.active{
-      border-color: rgba(0,255,240,.30);
-      background: rgba(0,255,240,.10);
-      box-shadow: 0 0 16px rgba(0,255,240,.12);
-      color: rgba(0,255,240,.95);
-    }
-
-    /* text style variants (visual difference, like “copy of post”) */
-    .style-pov .tgText{ font-size: 14px; letter-spacing: .01em; }
-    .style-pov .tgText b{ text-shadow: 0 0 12px rgba(255,45,255,.15); }
-
-    .style-insider .tgText{ font-size: 14px; line-height: 1.38; }
-    .style-insider .tgText b{ color: rgba(255,204,0,.96); text-shadow: 0 0 16px rgba(255,204,0,.12); }
-
-    .style-oldmoney .tgText{ font-size: 14px; line-height: 1.42; letter-spacing: .02em; }
-    .style-oldmoney .tgText{ color: rgba(233,225,255,.94); }
-    .style-oldmoney .tgText b{ letter-spacing: .06em; text-transform: uppercase; }
-
-    .style-noir .tgText{ font-size: 14px; line-height: 1.40; }
-    .style-noir .tgMediaBg{ filter: grayscale(1) contrast(1.2) brightness(.9); opacity:.85; }
-    .style-noir .tgBadge{ border-color: rgba(255,255,255,.20); background: rgba(255,255,255,.08); color: rgba(233,225,255,.92); }
-
-    .style-glow .tgText{ font-size: 14px; line-height: 1.36; }
-    .style-glow .tgText b{ color: rgba(0,255,240,.96); text-shadow: 0 0 18px rgba(0,255,240,.15); }
-    .style-glow .tgMediaBg{ opacity:.95; }
-
-    .style-brutal .tgText{ font-size: 15px; line-height: 1.25; letter-spacing: .06em; }
-    .style-brutal .tgText{ text-transform: uppercase; }
-    .style-brutal .tgText b{ color: rgba(255,45,255,.95); text-shadow: 0 0 18px rgba(255,45,255,.12); }
-
-    /* actions */
-    .sheetActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .hint{
-      font-size: 12px;
-      color: rgba(184,169,255,.88);
-      line-height: 1.3;
-      margin:0;
-    }
-
-    /* bottom nav */
-    .bottomNav{
-      margin-top: 12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      align-items:center;
-      opacity:.95;
-    }
-    .small{ font-size:12px; color: rgba(184,169,255,.86); }
-
-    /* mobile tweaks */
-    @media (max-width: 420px){
-      .brandTitle b{ font-size: 13px; }
-      .hero{ padding: 12px; }
-      .cardBody{ grid-template-columns: 1fr; }
-      .sumText span{ max-width: 62vw; }
-    }
-  </style>
+        /* === ГЛАВНАЯ КНОПКА === */
+        .main-btn {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            cursor: pointer;
+            z-index: 100;
+        }
+        .main-btn:active { transform: scale(0.98); }
+    </style>
 </head>
+<body>
 
-<body class="fx-scanlines fx-noise">
-  <div class="wrap">
-    <div class="top">
-      <div class="brand" id="brandBtn" title="Открыть канал/чат CADRHUB">
-        <div class="logo"></div>
-        <div class="brandTitle">
-          <b>CADRHUB</b>
-          <span>Bangkok Cyberpunk • 2177 build</span>
-        </div>
-      </div>
-
-      <div class="chipRow">
-        <div class="chip" id="chipHall"><span class="dot"></span><span>Зал славы</span></div>
-        <div class="chip" id="chipGames"><span class="dot pink"></span><span>Игры</span></div>
-        <div class="chip" id="chipPromo"><span class="dot gold"></span><span>Акции</span></div>
-      </div>
+    <div class="system-status">
+        <span><i data-lucide="shield-check" width="12"></i> SYSTEM: ONLINE</span>
+        <span id="userId">USER: ADMIN</span>
     </div>
 
-    <!-- ticker -->
-    <div class="ticker" id="tickerBox" style="display:none">
-      <div class="tickerInner">
-        <div class="tickerBadge"><span class="dot"></span><span>LIVE</span></div>
-        <div class="marquee" id="marquee">
-          <div class="tickerText" id="tickerTextA"></div>
-          <div class="tickerText" id="tickerTextB"></div>
+    <div class="container">
+        
+        <div class="panel">
+            <div class="panel-header"><i data-lucide="file-text" width="14"></i> Редактор Поста</div>
+            <textarea id="postText" placeholder="Введите текст поста... (Markdown поддерживается)"></textarea>
         </div>
-        <div class="tickerHint">⚡ новости / акции / приколы</div>
-      </div>
+
+        <div class="panel">
+            <div class="panel-header"><i data-lucide="image" width="14"></i> Тип вложения</div>
+            <div class="media-selector" id="mediaType">
+                <div class="media-option active" onclick="selectMedia('none')">
+                    <i data-lucide="x" width="20"></i><br>Нет
+                </div>
+                <div class="media-option" onclick="selectMedia('photo')">
+                    <i data-lucide="camera" width="20"></i><br>Фото
+                </div>
+                <div class="media-option" onclick="selectMedia('video')">
+                    <i data-lucide="video" width="20"></i><br>Видео
+                </div>
+                <div class="media-option" onclick="selectMedia('circle')">
+                    <i data-lucide="circle-dot" width="20"></i><br>Кружок
+                </div>
+            </div>
+            <div id="fileUploadInfo" style="margin-top:10px; font-size:12px; color:#aaa; display:none;">
+                ⚠️ Медиа-файл нужно будет отправить боту следующим сообщением после нажатия кнопки "Создать".
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header"><i data-lucide="mouse-pointer-2" width="14"></i> URL-Кнопки</div>
+            <div id="buttonsContainer">
+                </div>
+            <button class="add-btn" onclick="addButtonRow()">+ Добавить ряд кнопок</button>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header"><i data-lucide="settings" width="14"></i> Параметры публикации</div>
+            
+            <div class="setting-row">
+                <span>🔔 Отправить тихо (Silent)</span>
+                <label class="switch">
+                    <input type="checkbox" id="silentCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <span>📌 Закрепить в канале</span>
+                <label class="switch">
+                    <input type="checkbox" id="pinCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <span>💧 Добавить водяной знак (VIP)</span>
+                <label class="switch">
+                    <input type="checkbox" id="watermarkCheck" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
     </div>
 
-    <div class="hero">
-      <div class="heroIn">
-        <div class="preview" id="heroPreview">
-          <div class="previewCanvas"></div>
-          <div class="previewOverlay">
-            <div class="pill">📌 Смотри превью поста</div>
-            <div class="pill">🟣 потом жми “выбрать режим”</div>
-          </div>
-        </div>
+    <button class="main-btn" onclick="sendToBot()">
+        СОЗДАТЬ ПОСТ
+    </button>
 
-        <div class="heroRight">
-          <h1 class="h1">Показываем “как будет в Telegram”</h1>
-          <p class="sub">
-            Ты открываешь режим — видишь <b>реальный вид поста</b> (шрифт, стиль, медиа, кнопки).
-            Потом выбираешь режим — и бот просит файл.
-          </p>
-          <div class="ctaRow">
-            <div class="btn btnPrimary" id="btnRandom">
-              <span>🎲 Дай “вау-пакет”</span>
-              <span class="kbd">rng</span>
-            </div>
-            <div class="btn btnGhost" id="btnHow">
-              <span>⚙️ Как это работает</span>
-              <span class="kbd">tap</span>
-            </div>
-          </div>
-          <p class="hint" id="hintLine">
-            Важно: мини-аппка = витрина + предпросмотр. Загрузка/рендер — в боте.
-          </p>
-        </div>
-      </div>
-    </div>
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
+        lucide.createIcons();
 
-    <div class="grid" id="grid">
-      <details class="card" open>
-        <summary>
-          <div class="sumLeft">
-            <div class="icon"></div>
-            <div class="sumText">
-              <b>Посты • стили (6)</b>
-              <span>Смотри реальный пост, как он будет выглядеть</span>
-            </div>
-          </div>
-          <div class="sumRight">
-            <span>6</span><div class="chev"></div>
-          </div>
-        </summary>
-        <div class="cardBody" id="secPosts"></div>
-      </details>
+        // Установка цветов темы
+        tg.setHeaderColor('#050505');
+        tg.setBackgroundColor('#050505');
 
-      <details class="card">
-        <summary>
-          <div class="sumLeft">
-            <div class="icon"></div>
-            <div class="sumText">
-              <b>Коллажи (3)</b>
-              <span>Покажем пост с коллаж-медиа и CTA</span>
-            </div>
-          </div>
-          <div class="sumRight">
-            <span>3</span><div class="chev"></div>
-          </div>
-        </summary>
-        <div class="cardBody" id="secCollage"></div>
-      </details>
+        let currentMediaType = 'none';
 
-      <details class="card">
-        <summary>
-          <div class="sumLeft">
-            <div class="icon"></div>
-            <div class="sumText">
-              <b>Сетки эмодзи-видео (3)</b>
-              <span>Пак эмодзи + пост, как “дорогая упаковка”</span>
-            </div>
-          </div>
-          <div class="sumRight">
-            <span>3</span><div class="chev"></div>
-          </div>
-        </summary>
-        <div class="cardBody" id="secEmoji"></div>
-      </details>
+        function selectMedia(type) {
+            currentMediaType = type;
+            document.querySelectorAll('.media-option').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const info = document.getElementById('fileUploadInfo');
+            info.style.display = type === 'none' ? 'none' : 'block';
+        }
 
-      <details class="card">
-        <summary>
-          <div class="sumLeft">
-            <div class="icon"></div>
-            <div class="sumText">
-              <b>Из видео (7)</b>
-              <span>9:16 / 16:9 / кружок / аватар / эффекты</span>
-            </div>
-          </div>
-          <div class="sumRight">
-            <span>7</span><div class="chev"></div>
-          </div>
-        </summary>
-        <div class="cardBody" id="secVideo"></div>
-      </details>
-    </div>
+        function addButtonRow() {
+            const container = document.getElementById('buttonsContainer');
+            const div = document.createElement('div');
+            div.className = 'btn-row';
+            div.innerHTML = `
+                <input type="text" class="input-dark btn-text" placeholder="Текст кнопки">
+                <input type="text" class="input-dark btn-url" placeholder="https://...">
+                <div style="padding:10px; color:#ff4444;" onclick="this.parentElement.remove()">
+                    <i data-lucide="trash" width="16"></i>
+                </div>
+            `;
+            container.appendChild(div);
+            lucide.createIcons();
+        }
 
-    <div class="bottomNav">
-      <div class="small" id="smallStatus">⚡ Нажми карточку ➜ увидишь реальный вид поста.</div>
-      <div class="chip" id="btnBack"><span class="dot"></span><span>Back</span></div>
-    </div>
-  </div>
+        function sendToBot() {
+            const text = document.getElementById('postText').value;
+            
+            if (!text && currentMediaType === 'none') {
+                tg.showPopup({ title: 'Ошибка', message: 'Пост не может быть пустым!' });
+                return;
+            }
 
-  <!-- modal -->
-  <div class="modal" id="modal">
-    <div class="sheet">
-      <div class="sheetTop">
-        <b id="modalTitle">Preview</b>
-        <div class="x" id="modalClose">✕</div>
-      </div>
+            // Сбор кнопок
+            let buttons = [];
+            document.querySelectorAll('.btn-row').forEach(row => {
+                let txt = row.querySelector('.btn-text').value;
+                let url = row.querySelector('.btn-url').value;
+                if(txt && url) buttons.push({text: txt, url: url});
+            });
 
-      <div class="sheetBody">
-        <!-- style toggles -->
-        <div class="styleRow" id="styleRow"></div>
+            // Формирование JSON для твоего python-telegram-bot
+            const payload = {
+                action: "create_post", // Твой бот должен ловить этот action
+                text: text,
+                media_type: currentMediaType,
+                buttons: buttons,
+                settings: {
+                    silent: document.getElementById('silentCheck').checked,
+                    pin: document.getElementById('pinCheck').checked,
+                    watermark: document.getElementById('watermarkCheck').checked
+                }
+            };
 
-        <!-- Telegram-like post preview -->
-        <div class="tgWrap" id="tgWrap">
-          <div class="tgHeader">
-            <div class="tgAva"></div>
-            <div class="tgMeta">
-              <div class="tgName" id="tgName">CADRHUB • Studio</div>
-              <div class="tgTime" id="tgTime">сейчас • предпросмотр</div>
-            </div>
-            <div class="tgBadge" id="tgBadge">PREVIEW</div>
-          </div>
+            // Отправка данных боту
+            tg.sendData(JSON.stringify(payload));
+        }
 
-          <div class="tgMedia" id="tgMediaBox">
-            <div class="tgMediaBg" id="tgMediaBg"></div>
-            <div class="tgMediaFx"></div>
-            <div class="tgPlay"><div class="tgPlayBtn">▶</div></div>
-          </div>
-
-          <div class="tgBody">
-            <div class="tgText" id="tgText"></div>
-          </div>
-
-          <div class="tgFooter" id="tgFooter">
-            <div class="tgPill" id="pill1">🟣 кружок</div>
-            <div class="tgPill" id="pill2">🎭 аватар</div>
-            <div class="tgPill" id="pill3">🧩 эмодзи-видео</div>
-            <div class="tgPill" id="pill4">📝 пост</div>
-            <div class="tgPill" id="pill5">🧱 коллаж</div>
-            <div class="tgCta" id="tgCta">Забрать пакет</div>
-          </div>
-        </div>
-
-        <div class="sheetActions">
-          <div class="btn btnPrimary" id="btnPick">✅ Выбрать режим</div>
-          <div class="btn btnGhost" id="btnCopy">📋 Скопировать пост</div>
-          <div class="btn btnGhost" id="btnMore">✨ Предложи ещё</div>
-        </div>
-
-        <p class="hint" id="modalHint">
-          Здесь ты видишь “как будет в Telegram”. После “Выбрать режим” бот попросит файл.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const tg = window.Telegram?.WebApp;
-    try{ tg?.ready(); tg?.expand(); } catch(e){}
-
-    function getParam(name){
-      const u = new URL(location.href);
-      return u.searchParams.get(name) || "";
-    }
-
-    // brand click
-    let brandLink = getParam("brand") || "";
-    document.getElementById("brandBtn").addEventListener("click", ()=>{
-      if (brandLink) window.open(brandLink, "_blank");
-      else toast("Дай ссылку на канал/чат — сделаю кликабельным ✅");
-    });
-
-    // ticker (admin -> bot appends ?ticker=...)
-    const tickerBox = document.getElementById("tickerBox");
-    const tickerParam = decodeURIComponent(getParam("ticker") || "").trim();
-    if (tickerParam){
-      tickerBox.style.display = "block";
-      document.getElementById("tickerTextA").textContent = tickerParam;
-      document.getElementById("tickerTextB").textContent = tickerParam;
-    } else {
-      const fun = [
-        "Праздник скоро: если Telegram даст нам 1000 звёзд — мы дадим вам VIP 😄",
-        "Кружок — это новая валюта. CADRHUB печатает деньги 🟣",
-        "Секрет: эмодзи-видео = удержание. Называй это магией ✨",
-        "Админ на минуту отвлёкся — и вы уже сделали контент быстрее SMM-отдела 😎",
-        "Если видишь эту строку — значит сегодня кто-то поймает бонус 🎁"
-      ];
-      const chosen = fun[Math.floor(Math.random()*fun.length)];
-      tickerBox.style.display = "block";
-      document.getElementById("tickerTextA").textContent = chosen;
-      document.getElementById("tickerTextB").textContent = chosen;
-    }
-
-    // DATA: each card opens preview post with style + aspect
-    const STYLES = [
-      { id:"pov",    label:"POV",      cls:"style-pov" },
-      { id:"ins",    label:"INSIDER",  cls:"style-insider" },
-      { id:"old",    label:"OLD$",     cls:"style-oldmoney" },
-      { id:"noir",   label:"NOIR",     cls:"style-noir" },
-      { id:"glow",   label:"GLOW",     cls:"style-glow" },
-      { id:"brut",   label:"BRUTAL",   cls:"style-brutal" },
-    ];
-
-    const MODES = {
-      posts: [
-        { key:"style_pov", title:"POV • дерзкий", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "POV: ты заходишь в Telegram — и он уже выглядит дороже.",
-            "",
-            "⚡️ <b>Кружок</b> готов",
-            "🧩 <b>Эмодзи-видео</b> готово",
-            "🎭 <b>Аватар</b> — как у топов",
-            "",
-            "Хочешь так же? Жми кнопку ниже 👇"
-          ]},
-        { key:"style_insider", title:"Инсайдер • хайп", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "Сливаю схему, которую реально юзают админы 💅",
-            "",
-            "1) Видео → CADRHUB",
-            "2) Получаешь <b>кружок + эмодзи-пак</b>",
-            "3) Пост уже готов",
-            "",
-            "⚡️ Кто влетает сегодня — забирает бонус."
-          ]},
-        { key:"style_oldmoney", title:"Old Money • элитно", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "<b>МИНИМАЛИЗМ. СКОРОСТЬ. КАЧЕСТВО.</b>",
-            "",
-            "• Кружок — идеальный",
-            "• Аватар — чистый",
-            "• Эмодзи-видео — премиум",
-            "",
-            "Остальное — лишнее."
-          ]},
-        { key:"style_noir", title:"Noir • кино", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "<i>Город шумит. Экран светится.</i>",
-            "",
-            "Ты нажимаешь “Сделать кружок” — и получаешь кино.",
-            "",
-            "🖤 Noir-режим включён."
-          ]},
-        { key:"style_glow", title:"Glow • мило+неон", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "Сегодня делаем красиво ✨",
-            "",
-            "🎥 Видео → <b>кружок</b>",
-            "🎭 Аватар → <b>готов</b>",
-            "🧩 Эмодзи-видео → <b>вау</b>",
-            "",
-            "Сохрани, чтобы не потерять 💜"
-          ]},
-        { key:"style_brutal", title:"BRUTAL • коротко", tag:"ПОСТ", aspect:"ar-4x5",
-          baseText:[
-            "<b>КРУЖОК.</b>",
-            "<b>АВАТАР.</b>",
-            "<b>ЭМОДЗИ-ПАК.</b>",
-            "",
-            "СДЕЛАНО.",
-            "",
-            "ХОЧЕШЬ? → ЖМИ."
-          ]},
-      ],
-      collage: [
-        { key:"collage_grid", title:"Коллаж • 2×2", tag:"КОЛЛАЖ", aspect:"ar-16x9",
-          baseText:[
-            "<b>Коллаж 2×2</b> — чтобы зритель понял всё за 1 секунду.",
-            "",
-            "🧱 Видео+фото в сетке",
-            "📝 Пост с CTA",
-            "",
-            "Нажми “Забрать пакет” 👇"
-          ]},
-        { key:"collage_story", title:"Коллаж • Story", tag:"КОЛЛАЖ", aspect:"ar-9x16",
-          baseText:[
-            "<b>Story-коллаж</b> — вертикальная подача, идеально для внимания.",
-            "",
-            "• титр",
-            "• видео-кадр",
-            "• детали",
-            "",
-            "⚡️ Сделаем из твоего видео."
-          ]},
-        { key:"collage_brand", title:"Коллаж • Brand", tag:"КОЛЛАЖ", aspect:"ar-16x9",
-          baseText:[
-            "<b>Brand-коллаж</b> — когда нужно продавать аккуратно.",
-            "",
-            "Лого + кадр + кнопка + текст",
-            "",
-            "💎 Выглядит как у больших брендов."
-          ]},
-      ],
-      emoji: [
-        { key:"grid_3x3", title:"Эмодзи-видео • 3×3", tag:"EMOJI", aspect:"ar-1x1",
-          baseText:[
-            "<b>Пак 3×3</b> = 9 эмодзи-видео.",
-            "",
-            "Смотрится как “дорогая упаковка”.",
-            "",
-            "К этому — пост в выбранном стиле."
-          ]},
-        { key:"grid_20x1", title:"Эмодзи-видео • 20×1", tag:"EMOJI", aspect:"ar-16x9",
-          baseText:[
-            "<b>Таймлайн-пак 20×1</b> (по 3 сек).",
-            "",
-            "Это тот самый формат, который люди пересылают друзьям.",
-            "",
-            "⚡️ Плюсом: пост + кружок/аватар (по пакету)."
-          ]},
-        { key:"grid_strip", title:"Эмодзи-видео • 1×6", tag:"EMOJI", aspect:"ar-16x9",
-          baseText:[
-            "<b>Мини-пак 1×6</b> — попробовать на вкус.",
-            "",
-            "Потом захочешь 20×1 — это нормально 😄"
-          ]},
-      ],
-      video: [
-        { key:"circle", title:"Кружок • Live", tag:"VIDEO", aspect:"ar-circle",
-          baseText:[
-            "<b>КРУЖОК</b> — удержание 10/10.",
-            "",
-            "Люди отвечают на кружки чаще, чем на обычные видео.",
-            "",
-            "Делаем красиво. Без мыла. Без боли."
-          ]},
-        { key:"avatar", title:"Видео-аватар", tag:"VIDEO", aspect:"ar-1x1",
-          baseText:[
-            "<b>Видео-аватар</b> — визуально “дорого” даже на маленькой иконке.",
-            "",
-            "Идеально для канала/профиля."
-          ]},
-        { key:"9_16", title:"Вертикал • 9:16", tag:"VIDEO", aspect:"ar-9x16",
-          baseText:[
-            "<b>9:16</b> — формат, который люди досматривают.",
-            "",
-            "Плюсом можем сделать пост в стиле POV/Insider."
-          ]},
-        { key:"16_9", title:"Горизонт • 16:9", tag:"VIDEO", aspect:"ar-16x9",
-          baseText:[
-            "<b>16:9</b> — для обзоров, презентаций, YouTube-подачи.",
-            "",
-            "Идёт с аккуратным текстом и CTA."
-          ]},
-        { key:"fx_noir", title:"FX • Noir", tag:"FX", aspect:"ar-16x9",
-          baseText:[
-            "<b>Noir</b> — когда хочешь кино-атмосферу.",
-            "",
-            "Чёрно-белое + контраст + настроение."
-          ]},
-        { key:"fx_boomerang", title:"FX • Boomerang", tag:"FX", aspect:"ar-1x1",
-          baseText:[
-            "<b>Boomerang</b> — петля/реверс.",
-            "",
-            "Виральная штука для реакций."
-          ]},
-        { key:"fx_audio", title:"Audio • mp3", tag:"AUDIO", aspect:"ar-16x9",
-          baseText:[
-            "<b>MP3</b> — вытащим звук из видео.",
-            "",
-            "Голос/музыка/эффекты — отдельно."
-          ]},
-      ]
-    };
-
-    function mkItem(obj){
-      const d = document.createElement("div");
-      d.className = "item";
-      d.innerHTML = `
-        <div class="itemIn">
-          <div class="tag">${escapeHtml(obj.tag)}</div>
-          <b>${escapeHtml(obj.title)}</b>
-          <span>Открой — увидишь готовый пост в Telegram</span>
-        </div>
-      `;
-      d.addEventListener("click", ()=> openPreview(obj));
-      return d;
-    }
-
-    function mount(id, arr){
-      const root = document.getElementById(id);
-      root.innerHTML = "";
-      arr.forEach(x => root.appendChild(mkItem(x)));
-    }
-
-    mount("secPosts", MODES.posts);
-    mount("secCollage", MODES.collage);
-    mount("secEmoji", MODES.emoji);
-    mount("secVideo", MODES.video);
-
-    // modal refs
-    const modal = document.getElementById("modal");
-    const modalTitle = document.getElementById("modalTitle");
-    const styleRow = document.getElementById("styleRow");
-    const tgWrap = document.getElementById("tgWrap");
-    const tgBadge = document.getElementById("tgBadge");
-    const tgText = document.getElementById("tgText");
-    const tgMediaBox = document.getElementById("tgMediaBox");
-    const smallStatus = document.getElementById("smallStatus");
-
-    const btnPick = document.getElementById("btnPick");
-    const btnCopy = document.getElementById("btnCopy");
-    const btnMore = document.getElementById("btnMore");
-
-    let current = null;
-    let currentStyle = "pov";
-
-    // style chips in modal
-    function renderStyleChips(){
-      styleRow.innerHTML = "";
-      STYLES.forEach(s=>{
-        const b = document.createElement("div");
-        b.className = "sChip" + (s.id === currentStyle ? " active" : "");
-        b.textContent = s.label;
-        b.addEventListener("click", ()=>{
-          currentStyle = s.id;
-          applyStyle();
-          renderStyleChips();
-        });
-        styleRow.appendChild(b);
-      });
-    }
-
-    function applyStyle(){
-      tgWrap.classList.remove(...STYLES.map(x=>x.cls));
-      const st = STYLES.find(x=>x.id===currentStyle) || STYLES[0];
-      tgWrap.classList.add(st.cls);
-    }
-
-    function setAspect(cls){
-      tgMediaBox.className = "tgMedia " + cls;
-    }
-
-    function setFooterPills(byModeKey){
-      // show/hide pills depending on mode (so it feels “real”)
-      const p = {
-        pill1: document.getElementById("pill1"),
-        pill2: document.getElementById("pill2"),
-        pill3: document.getElementById("pill3"),
-        pill4: document.getElementById("pill4"),
-        pill5: document.getElementById("pill5"),
-      };
-
-      // defaults (full pack)
-      let show = { pill1:true, pill2:true, pill3:true, pill4:true, pill5:true };
-
-      if (byModeKey.startsWith("style_")) { show = { pill1:true, pill2:true, pill3:true, pill4:true, pill5:false }; }
-      if (byModeKey.startsWith("grid_"))  { show = { pill1:false, pill2:false, pill3:true, pill4:true, pill5:false }; }
-      if (byModeKey.startsWith("collage")){ show = { pill1:false, pill2:false, pill3:false, pill4:true, pill5:true }; }
-      if (byModeKey === "circle")         { show = { pill1:true, pill2:false, pill3:false, pill4:true, pill5:false }; }
-      if (byModeKey === "avatar")         { show = { pill1:false, pill2:true, pill3:false, pill4:true, pill5:false }; }
-      if (byModeKey === "fx_audio")       { show = { pill1:false, pill2:false, pill3:false, pill4:true, pill5:false }; }
-
-      Object.keys(p).forEach(k=>{
-        p[k].style.display = show[k] ? "inline-flex" : "none";
-      });
-    }
-
-    function openPreview(obj){
-      current = obj;
-
-      // pick a style automatically for non-post modes
-      if (obj.key.startsWith("style_")) currentStyle = obj.key.replace("style_","").slice(0,3) === "old" ? "old" : (obj.key.includes("insider")?"ins":"pov");
-      // keep whatever user last chose otherwise
-
-      modalTitle.textContent = obj.title;
-      tgBadge.textContent = obj.tag;
-
-      // text content rendered like Telegram (bold/italic already inside strings)
-      tgText.innerHTML = obj.baseText.map(x=>escapeHtmlKeepTags(x)).join("\n");
-
-      setAspect(obj.aspect || "ar-4x5");
-      setFooterPills(obj.key);
-
-      renderStyleChips();
-      applyStyle();
-
-      modal.classList.add("show");
-      smallStatus.textContent = "👀 Сейчас ты видишь готовый вид поста в Telegram (шрифт/стиль/медиа).";
-
-      try{ tg?.HapticFeedback?.impactOccurred("light"); } catch(e){}
-    }
-
-    function closeModal(){
-      modal.classList.remove("show");
-      try{ tg?.HapticFeedback?.impactOccurred("soft"); } catch(e){}
-    }
-
-    document.getElementById("modalClose").addEventListener("click", closeModal);
-    modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
-
-    // choose mode -> send to bot
-    btnPick.addEventListener("click", ()=>{
-      if(!current) return;
-      const payload = {
-        type: "video_setup",
-        mode: current.key,
-        style: currentStyle, // bot can ignore if not needed now
-      };
-      try{ tg?.sendData(JSON.stringify(payload)); } catch(e){}
-      toast("✅ Режим выбран. Теперь бот попросит файл.");
-    });
-
-    // copy post text (plain, without html tags)
-    btnCopy.addEventListener("click", async ()=>{
-      if(!current) return;
-      const plain = current.baseText.join("\n")
-        .replaceAll("<b>","").replaceAll("</b>","")
-        .replaceAll("<i>","").replaceAll("</i>","");
-      try{
-        await navigator.clipboard.writeText(plain);
-        toast("📋 Пост скопирован");
-      } catch(e){
-        toast("Не смог скопировать (браузер). Но текст виден.");
-      }
-    });
-
-    btnMore.addEventListener("click", ()=>{
-      const pack = rngPack();
-      toast("✨ Пакет: " + pack.map(x=>x.title).join(" + "));
-      openPreview(pack[0]);
-    });
-
-    // top chips
-    document.getElementById("chipHall").addEventListener("click", ()=> toast("🏆 Зал славы: топ активных скоро (день/неделя/месяц)."));
-    document.getElementById("chipGames").addEventListener("click", ()=> toast("🎰 Рулетка с ZERO скоро (VIP/бонусы)."));
-    document.getElementById("chipPromo").addEventListener("click", ()=> toast("💥 Акции включаются админом. Смотри бегущую строку."));
-
-    // buttons
-    document.getElementById("btnRandom").addEventListener("click", ()=>{
-      const pack = rngPack();
-      openPreview(pack[0]);
-      toast("🎲 Рандом-пак: " + pack.map(x=>x.title).join(" + "));
-    });
-    document.getElementById("btnHow").addEventListener("click", ()=>{
-      toast("Схема: открыл режим ➜ увидел реальный пост ➜ выбрал ➜ бот попросил файл.");
-    });
-
-    // back
-    document.getElementById("btnBack").addEventListener("click", ()=>{
-      try{ tg?.close(); } catch(e){ history.back(); }
-    });
-
-    // random pack
-    function rng(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-    function rngPack(){
-      const pickVideo = rng(MODES.video);
-      const pickEmoji = rng(MODES.emoji);
-      const pickPost  = rng(MODES.posts);
-      const pickColl  = rng(MODES.collage);
-      const pack = [pickVideo, pickEmoji, pickPost];
-      if (Math.random() > 0.55) pack.push(pickColl);
-      return pack;
-    }
-
-    // toast
-    let toastTimer = null;
-    function toast(text){
-      clearTimeout(toastTimer);
-      let t = document.getElementById("toast");
-      if(!t){
-        t = document.createElement("div");
-        t.id = "toast";
-        t.style.position="fixed";
-        t.style.left="50%";
-        t.style.bottom="calc(env(safe-area-inset-bottom) + 18px)";
-        t.style.transform="translateX(-50%)";
-        t.style.padding="10px 12px";
-        t.style.border="1px solid rgba(255,255,255,.16)";
-        t.style.background="rgba(0,0,0,.55)";
-        t.style.backdropFilter="blur(12px)";
-        t.style.borderRadius="999px";
-        t.style.color="rgba(233,225,255,.95)";
-        t.style.fontSize="13px";
-        t.style.boxShadow="0 20px 60px rgba(0,0,0,.55)";
-        t.style.zIndex="99";
-        document.body.appendChild(t);
-      }
-      t.textContent = text;
-      t.style.opacity="1";
-      toastTimer = setTimeout(()=>{ t.style.opacity="0"; }, 2600);
-    }
-
-    // safe escaping: allow <b> <i> only (for preview)
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-    function escapeHtmlKeepTags(s){
-      // escape everything, then restore &lt;b&gt; &lt;/b&gt; &lt;i&gt; &lt;/i&gt;
-      let x = escapeHtml(String(s));
-      x = x.replaceAll("&lt;b&gt;","<b>").replaceAll("&lt;/b&gt;","</b>");
-      x = x.replaceAll("&lt;i&gt;","<i>").replaceAll("&lt;/i&gt;","</i>");
-      return x;
-    }
-  </script>
+        // Показать юзернейм
+        if(tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            document.getElementById('userId').innerText = 
+                "OPERATOR: " + tg.initDataUnsafe.user.first_name.toUpperCase();
+        }
+    </script>
 </body>
 </html>
