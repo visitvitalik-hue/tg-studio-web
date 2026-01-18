@@ -24,7 +24,6 @@
       --radius2: 14px;
     }
 
-    /* Telegram WebApp safe areas */
     body{
       margin:0;
       color:var(--ink);
@@ -42,19 +41,17 @@
       overflow-x:hidden;
     }
 
-    /* cyber scanlines + noise */
+    /* scanlines + noise */
     .fx-scanlines::before{
       content:"";
       position:fixed; inset:0;
       pointer-events:none;
-      background:
-        repeating-linear-gradient(
-          to bottom,
+      background: repeating-linear-gradient(to bottom,
           rgba(255,255,255,.04),
           rgba(255,255,255,.04) 1px,
           rgba(0,0,0,0) 3px,
           rgba(0,0,0,0) 6px
-        );
+      );
       mix-blend-mode: overlay;
       opacity:.28;
       z-index: 2;
@@ -78,22 +75,13 @@
       100%{ transform:translate3d(0,0,0) }
     }
 
-    .wrap{
-      position:relative;
-      z-index:5;
-      max-width: 920px;
-      margin:0 auto;
-    }
+    .wrap{ position:relative; z-index:5; max-width: 920px; margin:0 auto; }
 
-    /* top brand bar */
+    /* top bar */
     .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; margin-bottom: 12px;
     }
-
     .brand{
       display:flex; align-items:center; gap:12px;
       padding: 10px 14px;
@@ -131,29 +119,11 @@
       55%{ transform: translateX(60%) rotate(20deg) }
       100%{ transform: translateX(60%) rotate(20deg) }
     }
+    .brandTitle{ display:flex; flex-direction:column; gap:2px; line-height:1.0; }
+    .brandTitle b{ font-size: 14px; letter-spacing:.12em; text-transform: uppercase; }
+    .brandTitle span{ font-size:12px; color: var(--mut); opacity:.9; }
 
-    .brandTitle{
-      display:flex; flex-direction:column; gap:2px;
-      line-height:1.0;
-    }
-    .brandTitle b{
-      font-size: 14px;
-      letter-spacing:.12em;
-      text-transform: uppercase;
-    }
-    .brandTitle span{
-      font-size:12px;
-      color: var(--mut);
-      opacity:.9;
-    }
-
-    .chipRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
+    .chipRow{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
     .chip{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.06);
@@ -195,9 +165,7 @@
       align-items:center;
     }
     .tickerBadge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       padding: 6px 10px;
       border:1px solid rgba(0,255,240,.28);
       background: rgba(0,255,240,.08);
@@ -210,8 +178,7 @@
       flex: 0 0 auto;
     }
     .marquee{
-      display:flex;
-      gap: 44px;
+      display:flex; gap: 44px;
       animation: marquee 18s linear infinite;
       will-change: transform;
     }
@@ -224,13 +191,9 @@
       font-size: 13px;
       text-shadow: 0 0 12px rgba(255,45,255,.12);
     }
-    .tickerHint{
-      color: rgba(184,169,255,.75);
-      font-size: 12px;
-      margin-left: 8px;
-    }
+    .tickerHint{ color: rgba(184,169,255,.75); font-size: 12px; margin-left: 8px; }
 
-    /* hero card */
+    /* hero */
     .hero{
       border:1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
@@ -251,14 +214,9 @@
       z-index:0;
     }
     .heroIn{
-      position:relative;
-      z-index:1;
-      display:flex;
-      gap: 14px;
-      align-items:stretch;
-      flex-wrap: wrap;
+      position:relative; z-index:1;
+      display:flex; gap: 14px; align-items:stretch; flex-wrap: wrap;
     }
-
     .preview{
       flex: 1 1 320px;
       min-height: 190px;
@@ -278,16 +236,11 @@
     }
     .previewOverlay{
       position:absolute; inset:0;
-      display:flex;
-      align-items:flex-end;
-      padding: 12px;
-      gap:10px;
+      display:flex; align-items:flex-end;
+      padding: 12px; gap:10px;
     }
-
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(0,0,0,.35);
@@ -298,29 +251,10 @@
       box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
 
-    .heroRight{
-      flex: 1 1 280px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .h1{
-      margin:0;
-      font-size: 18px;
-      letter-spacing:.06em;
-      text-transform: uppercase;
-    }
-    .sub{
-      margin:0;
-      font-size: 13px;
-      color: rgba(184,169,255,.92);
-      line-height: 1.35;
-    }
-
-    .ctaRow{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 6px;
-    }
+    .heroRight{ flex: 1 1 280px; display:flex; flex-direction:column; gap: 10px; }
+    .h1{ margin:0; font-size: 18px; letter-spacing:.06em; text-transform: uppercase; }
+    .sub{ margin:0; font-size: 13px; color: rgba(184,169,255,.92); line-height: 1.35; }
+    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 6px; }
     .btn{
       border:1px solid rgba(255,255,255,.16);
       background: rgba(255,255,255,.08);
@@ -344,9 +278,7 @@
       background: linear-gradient(180deg, rgba(0,255,240,.14), rgba(255,45,255,.10));
       box-shadow: 0 0 24px rgba(0,255,240,.10), 0 18px 60px rgba(0,0,0,.45);
     }
-    .btnGhost{
-      background: rgba(0,0,0,.25);
-    }
+    .btnGhost{ background: rgba(0,0,0,.25); }
     .kbd{
       font-size: 12px;
       padding: 2px 8px;
@@ -356,14 +288,13 @@
       color: rgba(233,225,255,.90);
     }
 
-    /* accordion sections */
+    /* accordion */
     .grid{
       display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 12px;
     }
-
     details.card{
       border:1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
@@ -384,11 +315,7 @@
       outline:none;
     }
     details.card summary::-webkit-details-marker{ display:none; }
-
-    .sumLeft{
-      display:flex; align-items:center; gap:12px;
-      min-width: 0;
-    }
+    .sumLeft{ display:flex; align-items:center; gap:12px; min-width: 0; }
     .icon{
       width: 42px; height: 42px;
       border-radius: 16px;
@@ -409,18 +336,8 @@
       opacity:.40;
       animation: shine 3.6s infinite;
     }
-
-    .sumText{
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .sumText b{
-      font-size: 14px;
-      letter-spacing:.06em;
-      text-transform: uppercase;
-    }
+    .sumText{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .sumText b{ font-size: 14px; letter-spacing:.06em; text-transform: uppercase; }
     .sumText span{
       font-size: 12px;
       color: rgba(184,169,255,.90);
@@ -429,13 +346,7 @@
       white-space: nowrap;
       max-width: 70vw;
     }
-
-    .sumRight{
-      display:flex; align-items:center; gap:10px;
-      flex: 0 0 auto;
-      color: rgba(233,225,255,.80);
-      font-size: 12px;
-    }
+    .sumRight{ display:flex; align-items:center; gap:10px; flex: 0 0 auto; color: rgba(233,225,255,.80); font-size: 12px; }
     .chev{
       width: 10px; height: 10px;
       border-right: 2px solid rgba(233,225,255,.65);
@@ -455,7 +366,6 @@
     @media (min-width: 760px){
       .cardBody{ grid-template-columns: repeat(3, minmax(0,1fr)); }
     }
-
     .item{
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.22);
@@ -465,7 +375,7 @@
       user-select:none;
       position:relative;
       overflow:hidden;
-      min-height: 94px;
+      min-height: 104px;
       transition: transform .08s ease;
     }
     .item:active{ transform: translateY(1px); }
@@ -475,26 +385,11 @@
       background:
         radial-gradient(140px 80px at 10% 15%, rgba(0,255,240,.10), transparent 60%),
         radial-gradient(140px 80px at 90% 20%, rgba(255,45,255,.09), transparent 60%);
-      opacity:.95;
-      z-index:0;
+      opacity:.95; z-index:0;
     }
-    .itemIn{
-      position:relative;
-      z-index:1;
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-    }
-    .item b{
-      font-size: 13px;
-      letter-spacing:.03em;
-      text-transform: uppercase;
-    }
-    .item span{
-      font-size: 12px;
-      color: rgba(184,169,255,.90);
-      line-height: 1.25;
-    }
+    .itemIn{ position:relative; z-index:1; display:flex; flex-direction:column; gap: 6px; }
+    .item b{ font-size: 13px; letter-spacing:.03em; text-transform: uppercase; }
+    .item span{ font-size: 12px; color: rgba(184,169,255,.90); line-height: 1.25; }
     .tag{
       align-self:flex-start;
       font-size: 11px;
@@ -505,13 +400,13 @@
       color: rgba(233,225,255,.9);
     }
 
-    /* modal preview */
+    /* MODAL */
     .modal{
       position:fixed; inset:0;
       display:none;
       align-items:flex-end;
       justify-content:center;
-      background: rgba(0,0,0,.55);
+      background: rgba(0,0,0,.62);
       z-index: 50;
       padding:
         calc(env(safe-area-inset-top) + 12px)
@@ -520,18 +415,20 @@
         calc(env(safe-area-inset-left) + 12px);
     }
     .modal.show{ display:flex; }
+
     .sheet{
       width: min(920px, 100%);
       border-radius: 26px;
       border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(16,0,28,.86), rgba(0,0,0,.66));
-      box-shadow: 0 26px 80px rgba(0,0,0,.75);
+      background: linear-gradient(180deg, rgba(16,0,28,.90), rgba(0,0,0,.70));
+      box-shadow: 0 26px 80px rgba(0,0,0,.80);
       backdrop-filter: blur(18px);
       overflow:hidden;
       transform: translateY(10px);
       animation: pop .12s ease forwards;
     }
     @keyframes pop{ to{ transform: translateY(0); } }
+
     .sheetTop{
       padding: 12px 14px;
       display:flex;
@@ -562,69 +459,186 @@
       grid-template-columns: 1fr;
       gap: 12px;
     }
-    .mock{
+
+    /* --- TELEGRAM POST PREVIEW (realistic) --- */
+    .tgWrap{
       border-radius: 22px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.25);
+      background: rgba(0,0,0,.28);
       overflow:hidden;
       position:relative;
-      min-height: 240px;
     }
-    .mock::before{
-      content:"";
-      position:absolute; inset:0;
+    .tgHeader{
+      display:flex; align-items:center; gap:10px;
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .tgAva{
+      width: 34px; height: 34px;
+      border-radius: 12px;
       background:
-        radial-gradient(240px 180px at 30% 30%, rgba(0,255,240,.12), transparent 60%),
-        radial-gradient(260px 180px at 80% 25%, rgba(255,45,255,.10), transparent 60%),
-        radial-gradient(340px 220px at 50% 110%, rgba(255,204,0,.08), transparent 60%),
-        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+        radial-gradient(10px 10px at 30% 30%, rgba(255,255,255,.9), transparent 55%),
+        conic-gradient(from 210deg, var(--neonA), var(--neonB), var(--neonC), var(--neonA));
+      box-shadow: 0 0 18px rgba(0,255,240,.18);
+      flex: 0 0 auto;
     }
-    .mockIn{
-      position:absolute; inset:0;
-      padding: 14px;
-      display:flex;
-      flex-direction:column;
-      gap: 12px;
-    }
-    .mockRow{
-      display:flex; gap:10px; align-items:center;
-    }
-    .ph{
-      width: 44px; height: 44px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 0 22px rgba(0,255,240,.10);
-    }
-    .lines{
-      display:flex; flex-direction:column; gap:6px;
-      flex:1;
-    }
-    .line{
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.10);
-      width: 70%;
-    }
-    .line.s{ width: 45%; opacity:.85; }
-    .media{
-      flex:1;
-      border-radius: 20px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      position:relative;
+    .tgMeta{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .tgName{
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing:.02em;
       overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
     }
-    .media::after{
-      content:"";
-      position:absolute; inset:-40%;
-      background: linear-gradient(120deg, transparent, rgba(255,255,255,.28), transparent);
-      transform: rotate(20deg);
-      animation: shine 3.4s infinite;
-      opacity:.35;
+    .tgTime{
+      font-size: 11px;
+      color: rgba(184,169,255,.80);
+    }
+    .tgBadge{
+      margin-left:auto;
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(0,255,240,.25);
+      background: rgba(0,255,240,.08);
+      color: rgba(0,255,240,.95);
+      letter-spacing:.08em;
+      text-transform: uppercase;
     }
 
+    .tgMedia{
+      position:relative;
+      background: rgba(255,255,255,.05);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    /* aspect ratio set via classes */
+    .ar-9x16{ aspect-ratio: 9 / 16; }
+    .ar-16x9{ aspect-ratio: 16 / 9; }
+    .ar-1x1{ aspect-ratio: 1 / 1; }
+    .ar-4x5{ aspect-ratio: 4 / 5; }
+    .ar-circle{ aspect-ratio: 1 / 1; border-radius: 999px; margin: 12px auto; width: min(72%, 360px); border:1px solid rgba(255,255,255,.14); }
+
+    .tgMediaBg{
+      position:absolute; inset:-30%;
+      background: linear-gradient(135deg, rgba(0,255,240,.14), rgba(255,45,255,.12)),
+                  radial-gradient(280px 180px at 30% 30%, rgba(255,255,255,.12), transparent 60%),
+                  radial-gradient(320px 220px at 70% 30%, rgba(255,204,0,.10), transparent 60%),
+                  linear-gradient(135deg, rgba(0,0,0,.20), rgba(255,255,255,.05));
+      transform: rotate(10deg);
+      opacity:.9;
+    }
+    .tgMediaFx{
+      position:absolute; inset:0;
+      background: repeating-linear-gradient(to bottom, rgba(255,255,255,.05), rgba(255,255,255,.05) 1px, rgba(0,0,0,0) 5px, rgba(0,0,0,0) 8px);
+      opacity:.22;
+      mix-blend-mode: overlay;
+      pointer-events:none;
+    }
+    .tgPlay{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      pointer-events:none;
+    }
+    .tgPlayBtn{
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.55);
+      display:grid; place-items:center;
+      color: rgba(233,225,255,.95);
+      font-weight: 900;
+    }
+
+    .tgBody{ padding: 12px 12px 10px; }
+    .tgText{
+      font-size: 14px;
+      line-height: 1.35;
+      color: rgba(233,225,255,.96);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .tgText b{ font-weight: 900; }
+    .tgText i{ opacity:.95; }
+
+    .tgFooter{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding: 10px 12px 12px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .tgPill{
+      font-size: 11px;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(233,225,255,.92);
+    }
+    .tgCta{
+      margin-left:auto;
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border:1px solid rgba(0,255,240,.28);
+      background: linear-gradient(180deg, rgba(0,255,240,.14), rgba(255,45,255,.10));
+      color: rgba(233,225,255,.95);
+      font-weight: 900;
+      cursor:pointer;
+      user-select:none;
+      box-shadow: 0 0 18px rgba(0,255,240,.10);
+    }
+    .tgCta:active{ transform: translateY(1px); }
+
+    /* style chips inside modal */
+    .styleRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .sChip{
+      font-size: 11px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.28);
+      color: rgba(233,225,255,.92);
+      cursor:pointer;
+      user-select:none;
+    }
+    .sChip.active{
+      border-color: rgba(0,255,240,.30);
+      background: rgba(0,255,240,.10);
+      box-shadow: 0 0 16px rgba(0,255,240,.12);
+      color: rgba(0,255,240,.95);
+    }
+
+    /* text style variants (visual difference, like “copy of post”) */
+    .style-pov .tgText{ font-size: 14px; letter-spacing: .01em; }
+    .style-pov .tgText b{ text-shadow: 0 0 12px rgba(255,45,255,.15); }
+
+    .style-insider .tgText{ font-size: 14px; line-height: 1.38; }
+    .style-insider .tgText b{ color: rgba(255,204,0,.96); text-shadow: 0 0 16px rgba(255,204,0,.12); }
+
+    .style-oldmoney .tgText{ font-size: 14px; line-height: 1.42; letter-spacing: .02em; }
+    .style-oldmoney .tgText{ color: rgba(233,225,255,.94); }
+    .style-oldmoney .tgText b{ letter-spacing: .06em; text-transform: uppercase; }
+
+    .style-noir .tgText{ font-size: 14px; line-height: 1.40; }
+    .style-noir .tgMediaBg{ filter: grayscale(1) contrast(1.2) brightness(.9); opacity:.85; }
+    .style-noir .tgBadge{ border-color: rgba(255,255,255,.20); background: rgba(255,255,255,.08); color: rgba(233,225,255,.92); }
+
+    .style-glow .tgText{ font-size: 14px; line-height: 1.36; }
+    .style-glow .tgText b{ color: rgba(0,255,240,.96); text-shadow: 0 0 18px rgba(0,255,240,.15); }
+    .style-glow .tgMediaBg{ opacity:.95; }
+
+    .style-brutal .tgText{ font-size: 15px; line-height: 1.25; letter-spacing: .06em; }
+    .style-brutal .tgText{ text-transform: uppercase; }
+    .style-brutal .tgText b{ color: rgba(255,45,255,.95); text-shadow: 0 0 18px rgba(255,45,255,.12); }
+
+    /* actions */
     .sheetActions{
       display:flex;
       gap:10px;
@@ -647,54 +661,7 @@
       align-items:center;
       opacity:.95;
     }
-
-    .small{
-      font-size:12px;
-      color: rgba(184,169,255,.86);
-    }
-
-    /* glitch title */
-    .glitch{
-      position:relative;
-      display:inline-block;
-      text-shadow: 0 0 18px rgba(0,255,240,.16);
-    }
-    .glitch::before, .glitch::after{
-      content: attr(data-text);
-      position:absolute;
-      left:0; top:0;
-      opacity:.55;
-      clip-path: inset(0 0 0 0);
-      mix-blend-mode: screen;
-    }
-    .glitch::before{
-      transform: translate(1px,0);
-      color: var(--neonA);
-      animation: glitchA 3.2s infinite;
-    }
-    .glitch::after{
-      transform: translate(-1px,0);
-      color: var(--neonB);
-      animation: glitchB 2.7s infinite;
-    }
-    @keyframes glitchA{
-      0%,100%{ clip-path: inset(0 0 92% 0); }
-      10%{ clip-path: inset(42% 0 42% 0); }
-      18%{ clip-path: inset(18% 0 60% 0); }
-      28%{ clip-path: inset(70% 0 14% 0); }
-      40%{ clip-path: inset(0 0 88% 0); }
-      60%{ clip-path: inset(40% 0 40% 0); }
-      78%{ clip-path: inset(62% 0 24% 0); }
-    }
-    @keyframes glitchB{
-      0%,100%{ clip-path: inset(88% 0 0 0); }
-      12%{ clip-path: inset(12% 0 70% 0); }
-      22%{ clip-path: inset(52% 0 34% 0); }
-      36%{ clip-path: inset(24% 0 60% 0); }
-      52%{ clip-path: inset(70% 0 12% 0); }
-      66%{ clip-path: inset(44% 0 38% 0); }
-      84%{ clip-path: inset(18% 0 68% 0); }
-    }
+    .small{ font-size:12px; color: rgba(184,169,255,.86); }
 
     /* mobile tweaks */
     @media (max-width: 420px){
@@ -712,7 +679,7 @@
       <div class="brand" id="brandBtn" title="Открыть канал/чат CADRHUB">
         <div class="logo"></div>
         <div class="brandTitle">
-          <b class="glitch" data-text="CADRHUB">CADRHUB</b>
+          <b>CADRHUB</b>
           <span>Bangkok Cyberpunk • 2177 build</span>
         </div>
       </div>
@@ -724,7 +691,7 @@
       </div>
     </div>
 
-    <!-- ticker (admin controlled via url ?ticker=...) -->
+    <!-- ticker -->
     <div class="ticker" id="tickerBox" style="display:none">
       <div class="tickerInner">
         <div class="tickerBadge"><span class="dot"></span><span>LIVE</span></div>
@@ -741,45 +708,42 @@
         <div class="preview" id="heroPreview">
           <div class="previewCanvas"></div>
           <div class="previewOverlay">
-            <div class="pill">🎥 Preview • <span id="heroMode">Каталог</span></div>
-            <div class="pill">💎 CADRART / CADRHUB</div>
+            <div class="pill">📌 Смотри превью поста</div>
+            <div class="pill">🟣 потом жми “выбрать режим”</div>
           </div>
         </div>
 
         <div class="heroRight">
-          <h1 class="h1">Твой контент-завод в Телеге</h1>
+          <h1 class="h1">Показываем “как будет в Telegram”</h1>
           <p class="sub">
-            Выбирай режим ➜ загрузи видео/фото в боте ➜ получи пакет:
-            <b>кружок / аватар / эмодзи-видео / пост / коллаж</b>.
-            Всё выглядит дорого. Всё делается быстро.
+            Ты открываешь режим — видишь <b>реальный вид поста</b> (шрифт, стиль, медиа, кнопки).
+            Потом выбираешь режим — и бот просит файл.
           </p>
           <div class="ctaRow">
-            <div class="btn btnPrimary" id="btnHow">
-              <span>⚙️ Как пользоваться</span>
-              <span class="kbd">tap</span>
-            </div>
-            <div class="btn btnGhost" id="btnRandom">
-              <span>🎲 Подобрать пакет</span>
+            <div class="btn btnPrimary" id="btnRandom">
+              <span>🎲 Дай “вау-пакет”</span>
               <span class="kbd">rng</span>
+            </div>
+            <div class="btn btnGhost" id="btnHow">
+              <span>⚙️ Как это работает</span>
+              <span class="kbd">tap</span>
             </div>
           </div>
           <p class="hint" id="hintLine">
-            Советы: сначала выбери режим ➜ потом загрузи файл в боте.
-            В мини-аппке ты видишь “как будет выглядеть”.
+            Важно: мини-аппка = витрина + предпросмотр. Загрузка/рендер — в боте.
           </p>
         </div>
       </div>
     </div>
 
     <div class="grid" id="grid">
-      <!-- POSTS / STYLES 6 -->
       <details class="card" open>
         <summary>
           <div class="sumLeft">
             <div class="icon"></div>
             <div class="sumText">
               <b>Посты • стили (6)</b>
-              <span>Наглядные шаблоны текста + медиа, чтобы залипали</span>
+              <span>Смотри реальный пост, как он будет выглядеть</span>
             </div>
           </div>
           <div class="sumRight">
@@ -789,14 +753,13 @@
         <div class="cardBody" id="secPosts"></div>
       </details>
 
-      <!-- COLLAGES 3 -->
       <details class="card">
         <summary>
           <div class="sumLeft">
             <div class="icon"></div>
             <div class="sumText">
               <b>Коллажи (3)</b>
-              <span>Видео+фото в одном кадре, чтобы “вау” без монтажа</span>
+              <span>Покажем пост с коллаж-медиа и CTA</span>
             </div>
           </div>
           <div class="sumRight">
@@ -806,14 +769,13 @@
         <div class="cardBody" id="secCollage"></div>
       </details>
 
-      <!-- EMOJI VIDEO GRIDS 3 -->
       <details class="card">
         <summary>
           <div class="sumLeft">
             <div class="icon"></div>
             <div class="sumText">
               <b>Сетки эмодзи-видео (3)</b>
-              <span>1×20 / 3×3 / 20×1 — для премиум-паков</span>
+              <span>Пак эмодзи + пост, как “дорогая упаковка”</span>
             </div>
           </div>
           <div class="sumRight">
@@ -823,14 +785,13 @@
         <div class="cardBody" id="secEmoji"></div>
       </details>
 
-      <!-- VIDEO MODES 7 -->
       <details class="card">
         <summary>
           <div class="sumLeft">
             <div class="icon"></div>
             <div class="sumText">
               <b>Из видео (7)</b>
-              <span>Кружок / аватар / 9:16 / 16:9 / noir / boomerang / audio</span>
+              <span>9:16 / 16:9 / кружок / аватар / эффекты</span>
             </div>
           </div>
           <div class="sumRight">
@@ -842,7 +803,7 @@
     </div>
 
     <div class="bottomNav">
-      <div class="small" id="smallStatus">⚡ Ready. Жми карточку ➜ увидишь превью.</div>
+      <div class="small" id="smallStatus">⚡ Нажми карточку ➜ увидишь реальный вид поста.</div>
       <div class="chip" id="btnBack"><span class="dot"></span><span>Back</span></div>
     </div>
   </div>
@@ -854,209 +815,435 @@
         <b id="modalTitle">Preview</b>
         <div class="x" id="modalClose">✕</div>
       </div>
+
       <div class="sheetBody">
-        <div class="mock">
-          <div class="mockIn">
-            <div class="mockRow">
-              <div class="ph"></div>
-              <div class="lines">
-                <div class="line"></div>
-                <div class="line s"></div>
-              </div>
-              <div class="pill" id="modalTag">⚡</div>
+        <!-- style toggles -->
+        <div class="styleRow" id="styleRow"></div>
+
+        <!-- Telegram-like post preview -->
+        <div class="tgWrap" id="tgWrap">
+          <div class="tgHeader">
+            <div class="tgAva"></div>
+            <div class="tgMeta">
+              <div class="tgName" id="tgName">CADRHUB • Studio</div>
+              <div class="tgTime" id="tgTime">сейчас • предпросмотр</div>
             </div>
-            <div class="media" id="modalMedia"></div>
-            <p class="hint" id="modalText"></p>
+            <div class="tgBadge" id="tgBadge">PREVIEW</div>
+          </div>
+
+          <div class="tgMedia" id="tgMediaBox">
+            <div class="tgMediaBg" id="tgMediaBg"></div>
+            <div class="tgMediaFx"></div>
+            <div class="tgPlay"><div class="tgPlayBtn">▶</div></div>
+          </div>
+
+          <div class="tgBody">
+            <div class="tgText" id="tgText"></div>
+          </div>
+
+          <div class="tgFooter" id="tgFooter">
+            <div class="tgPill" id="pill1">🟣 кружок</div>
+            <div class="tgPill" id="pill2">🎭 аватар</div>
+            <div class="tgPill" id="pill3">🧩 эмодзи-видео</div>
+            <div class="tgPill" id="pill4">📝 пост</div>
+            <div class="tgPill" id="pill5">🧱 коллаж</div>
+            <div class="tgCta" id="tgCta">Забрать пакет</div>
           </div>
         </div>
 
         <div class="sheetActions">
           <div class="btn btnPrimary" id="btnPick">✅ Выбрать режим</div>
-          <div class="btn btnGhost" id="btnCopy">📋 Скопировать текст</div>
+          <div class="btn btnGhost" id="btnCopy">📋 Скопировать пост</div>
           <div class="btn btnGhost" id="btnMore">✨ Предложи ещё</div>
         </div>
 
         <p class="hint" id="modalHint">
-          После выбора режима бот попросит загрузить файл.
-          Мини-аппка показывает “как будет выглядеть”.
+          Здесь ты видишь “как будет в Telegram”. После “Выбрать режим” бот попросит файл.
         </p>
       </div>
     </div>
   </div>
 
   <script>
-    // Telegram WebApp bridge (safe)
     const tg = window.Telegram?.WebApp;
     try{ tg?.ready(); tg?.expand(); } catch(e){}
 
-    // === ticker (admin sends text; bot adds ?ticker=... in url) ===
     function getParam(name){
       const u = new URL(location.href);
       return u.searchParams.get(name) || "";
     }
-    const tickerParam = getParam("ticker");
-    const tickerTextRaw = decodeURIComponent(tickerParam || "").trim();
-    const tickerBox = document.getElementById("tickerBox");
-    if (tickerTextRaw){
-      tickerBox.style.display = "block";
-      const a = document.getElementById("tickerTextA");
-      const b = document.getElementById("tickerTextB");
-      a.textContent = tickerTextRaw;
-      b.textContent = tickerTextRaw;
-    }
 
-    // clickable logo
-    let brandLink = getParam("brand") || ""; // you will add later
+    // brand click
+    let brandLink = getParam("brand") || "";
     document.getElementById("brandBtn").addEventListener("click", ()=>{
-      if (brandLink){
-        window.open(brandLink, "_blank");
-      }else{
-        toast("Дай ссылку на канал/чат — сделаю кликабельным ✅");
-      }
+      if (brandLink) window.open(brandLink, "_blank");
+      else toast("Дай ссылку на канал/чат — сделаю кликабельным ✅");
     });
 
-    // data
-    const DATA = {
+    // ticker (admin -> bot appends ?ticker=...)
+    const tickerBox = document.getElementById("tickerBox");
+    const tickerParam = decodeURIComponent(getParam("ticker") || "").trim();
+    if (tickerParam){
+      tickerBox.style.display = "block";
+      document.getElementById("tickerTextA").textContent = tickerParam;
+      document.getElementById("tickerTextB").textContent = tickerParam;
+    } else {
+      const fun = [
+        "Праздник скоро: если Telegram даст нам 1000 звёзд — мы дадим вам VIP 😄",
+        "Кружок — это новая валюта. CADRHUB печатает деньги 🟣",
+        "Секрет: эмодзи-видео = удержание. Называй это магией ✨",
+        "Админ на минуту отвлёкся — и вы уже сделали контент быстрее SMM-отдела 😎",
+        "Если видишь эту строку — значит сегодня кто-то поймает бонус 🎁"
+      ];
+      const chosen = fun[Math.floor(Math.random()*fun.length)];
+      tickerBox.style.display = "block";
+      document.getElementById("tickerTextA").textContent = chosen;
+      document.getElementById("tickerTextB").textContent = chosen;
+    }
+
+    // DATA: each card opens preview post with style + aspect
+    const STYLES = [
+      { id:"pov",    label:"POV",      cls:"style-pov" },
+      { id:"ins",    label:"INSIDER",  cls:"style-insider" },
+      { id:"old",    label:"OLD$",     cls:"style-oldmoney" },
+      { id:"noir",   label:"NOIR",     cls:"style-noir" },
+      { id:"glow",   label:"GLOW",     cls:"style-glow" },
+      { id:"brut",   label:"BRUTAL",   cls:"style-brutal" },
+    ];
+
+    const MODES = {
       posts: [
-        { key:"style_pov", title:"POV • дерзкий", tag:"ПОСТ", desc:"Стиль POV, короткие строки, ударные фразы. Подходит для кружка/аватара." ,
-          sample:"POV: ты влетаешь в Telegram, и он уже выглядит дороже.\\n\\n⚡️ Кружок готов\\n🧩 Эмодзи-видео готово\\n🟣 Аватар — как у топов\\n\\nХочешь так же? Жми кнопку 👇"},
-        { key:"style_insider", title:"Инсайдер • хайп", tag:"ПОСТ", desc:"Как будто ты “в теме”. Залипательный стиль, цепляет комменты.",
-          sample:"Сливаю схему, которую юзают админы 💅\\n\\n1) Видео → CADRHUB\\n2) Получаешь кружок + эмодзи-пак\\n3) Пост уже готов\\n\\n⚡️ Кто влетает сегодня — забирает бонус."},
-        { key:"style_oldmoney", title:"Old Money • элитно", tag:"ПОСТ", desc:"Дорого, лаконично, без лишнего. Для брендов/экспертов.",
-          sample:"Минимализм. Скорость. Качество.\\n\\n• Кружок — идеальный\\n• Аватар — чистый\\n• Эмодзи-видео — премиум\\n\\nОстальное — лишнее."},
-        { key:"style_noir", title:"Noir • кино", tag:"ПОСТ", desc:"Густо, атмосферно. Отлично заходит на ночных каналах.",
-          sample:"Город шумит. Экран светится.\\n\\nТы нажимаешь “Сделать кружок” — и получаешь кино.\\n\\n🖤 Noir-режим включён."},
-        { key:"style_girly", title:"Glow • мило+неон", tag:"ПОСТ", desc:"Лёгкий, милый, но с неоном. Норм для lifestyle/beauty.",
-          sample:"Сегодня мы делаем красиво ✨\\n\\n🎥 Видео → кружок\\n🟣 Аватар → готов\\n🧩 Эмодзи-видео → вау\\n\\nСохрани, чтобы не потерять 💜"},
-        { key:"style_brutal", title:"BRUTAL • коротко", tag:"ПОСТ", desc:"Один удар — один смысл. Для подростков/мем-каналов.",
-          sample:"КРУЖОК.\\nАВАТАР.\\nЭМОДЗИ-ПАК.\\n\\nСделано.\\n\\nХочешь? → Жми."},
+        { key:"style_pov", title:"POV • дерзкий", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "POV: ты заходишь в Telegram — и он уже выглядит дороже.",
+            "",
+            "⚡️ <b>Кружок</b> готов",
+            "🧩 <b>Эмодзи-видео</b> готово",
+            "🎭 <b>Аватар</b> — как у топов",
+            "",
+            "Хочешь так же? Жми кнопку ниже 👇"
+          ]},
+        { key:"style_insider", title:"Инсайдер • хайп", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "Сливаю схему, которую реально юзают админы 💅",
+            "",
+            "1) Видео → CADRHUB",
+            "2) Получаешь <b>кружок + эмодзи-пак</b>",
+            "3) Пост уже готов",
+            "",
+            "⚡️ Кто влетает сегодня — забирает бонус."
+          ]},
+        { key:"style_oldmoney", title:"Old Money • элитно", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "<b>МИНИМАЛИЗМ. СКОРОСТЬ. КАЧЕСТВО.</b>",
+            "",
+            "• Кружок — идеальный",
+            "• Аватар — чистый",
+            "• Эмодзи-видео — премиум",
+            "",
+            "Остальное — лишнее."
+          ]},
+        { key:"style_noir", title:"Noir • кино", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "<i>Город шумит. Экран светится.</i>",
+            "",
+            "Ты нажимаешь “Сделать кружок” — и получаешь кино.",
+            "",
+            "🖤 Noir-режим включён."
+          ]},
+        { key:"style_glow", title:"Glow • мило+неон", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "Сегодня делаем красиво ✨",
+            "",
+            "🎥 Видео → <b>кружок</b>",
+            "🎭 Аватар → <b>готов</b>",
+            "🧩 Эмодзи-видео → <b>вау</b>",
+            "",
+            "Сохрани, чтобы не потерять 💜"
+          ]},
+        { key:"style_brutal", title:"BRUTAL • коротко", tag:"ПОСТ", aspect:"ar-4x5",
+          baseText:[
+            "<b>КРУЖОК.</b>",
+            "<b>АВАТАР.</b>",
+            "<b>ЭМОДЗИ-ПАК.</b>",
+            "",
+            "СДЕЛАНО.",
+            "",
+            "ХОЧЕШЬ? → ЖМИ."
+          ]},
       ],
       collage: [
-        { key:"collage_grid", title:"Коллаж • 2×2", tag:"КОЛЛАЖ", desc:"Видео+фото в сетке. Для подборок/рекламы/обзоров." },
-        { key:"collage_story", title:"Коллаж • Story", tag:"КОЛЛАЖ", desc:"Вертикальный микс: титр + видео + детали." },
-        { key:"collage_brand", title:"Коллаж • Brand", tag:"КОЛЛАЖ", desc:"Мини-баннер: лого, CTA, видео-кадр, цена/акция." },
+        { key:"collage_grid", title:"Коллаж • 2×2", tag:"КОЛЛАЖ", aspect:"ar-16x9",
+          baseText:[
+            "<b>Коллаж 2×2</b> — чтобы зритель понял всё за 1 секунду.",
+            "",
+            "🧱 Видео+фото в сетке",
+            "📝 Пост с CTA",
+            "",
+            "Нажми “Забрать пакет” 👇"
+          ]},
+        { key:"collage_story", title:"Коллаж • Story", tag:"КОЛЛАЖ", aspect:"ar-9x16",
+          baseText:[
+            "<b>Story-коллаж</b> — вертикальная подача, идеально для внимания.",
+            "",
+            "• титр",
+            "• видео-кадр",
+            "• детали",
+            "",
+            "⚡️ Сделаем из твоего видео."
+          ]},
+        { key:"collage_brand", title:"Коллаж • Brand", tag:"КОЛЛАЖ", aspect:"ar-16x9",
+          baseText:[
+            "<b>Brand-коллаж</b> — когда нужно продавать аккуратно.",
+            "",
+            "Лого + кадр + кнопка + текст",
+            "",
+            "💎 Выглядит как у больших брендов."
+          ]},
       ],
       emoji: [
-        { key:"grid_3x3", title:"Эмодзи-видео • 3×3", tag:"EMOJI", desc:"Пак из 9 штук, эффект “дорогой набор”." },
-        { key:"grid_20x1", title:"Эмодзи-видео • 20×1", tag:"EMOJI", desc:"Таймлайн-пак 20 штук (по 3 сек). Твой главный хит." },
-        { key:"grid_strip", title:"Эмодзи-видео • 1×6", tag:"EMOJI", desc:"Короткий мини-пак, чтобы попробовать." },
+        { key:"grid_3x3", title:"Эмодзи-видео • 3×3", tag:"EMOJI", aspect:"ar-1x1",
+          baseText:[
+            "<b>Пак 3×3</b> = 9 эмодзи-видео.",
+            "",
+            "Смотрится как “дорогая упаковка”.",
+            "",
+            "К этому — пост в выбранном стиле."
+          ]},
+        { key:"grid_20x1", title:"Эмодзи-видео • 20×1", tag:"EMOJI", aspect:"ar-16x9",
+          baseText:[
+            "<b>Таймлайн-пак 20×1</b> (по 3 сек).",
+            "",
+            "Это тот самый формат, который люди пересылают друзьям.",
+            "",
+            "⚡️ Плюсом: пост + кружок/аватар (по пакету)."
+          ]},
+        { key:"grid_strip", title:"Эмодзи-видео • 1×6", tag:"EMOJI", aspect:"ar-16x9",
+          baseText:[
+            "<b>Мини-пак 1×6</b> — попробовать на вкус.",
+            "",
+            "Потом захочешь 20×1 — это нормально 😄"
+          ]},
       ],
       video: [
-        { key:"circle", title:"Кружок • Live", tag:"VIDEO", desc:"Видео-кружок для сообщений. Максимум удержания." },
-        { key:"avatar", title:"Видео-аватар", tag:"VIDEO", desc:"Для профиля/канала. Чёткий, мягкий, стильный." },
-        { key:"9_16", title:"Вертикал • 9:16", tag:"VIDEO", desc:"Под сторис/shorts-посты." },
-        { key:"16_9", title:"Горизонт • 16:9", tag:"VIDEO", desc:"Под YouTube/обзоры/презентации." },
-        { key:"fx_noir", title:"FX • Noir", tag:"FX", desc:"Чёрно-белый фильм + винтажные кривые." },
-        { key:"fx_boomerang", title:"FX • Boomerang", tag:"FX", desc:"Реверс-петля. Виральная штука." },
-        { key:"fx_audio", title:"Audio • mp3", tag:"AUDIO", desc:"Вытащить звук. Голос/музыка/эффекты." },
+        { key:"circle", title:"Кружок • Live", tag:"VIDEO", aspect:"ar-circle",
+          baseText:[
+            "<b>КРУЖОК</b> — удержание 10/10.",
+            "",
+            "Люди отвечают на кружки чаще, чем на обычные видео.",
+            "",
+            "Делаем красиво. Без мыла. Без боли."
+          ]},
+        { key:"avatar", title:"Видео-аватар", tag:"VIDEO", aspect:"ar-1x1",
+          baseText:[
+            "<b>Видео-аватар</b> — визуально “дорого” даже на маленькой иконке.",
+            "",
+            "Идеально для канала/профиля."
+          ]},
+        { key:"9_16", title:"Вертикал • 9:16", tag:"VIDEO", aspect:"ar-9x16",
+          baseText:[
+            "<b>9:16</b> — формат, который люди досматривают.",
+            "",
+            "Плюсом можем сделать пост в стиле POV/Insider."
+          ]},
+        { key:"16_9", title:"Горизонт • 16:9", tag:"VIDEO", aspect:"ar-16x9",
+          baseText:[
+            "<b>16:9</b> — для обзоров, презентаций, YouTube-подачи.",
+            "",
+            "Идёт с аккуратным текстом и CTA."
+          ]},
+        { key:"fx_noir", title:"FX • Noir", tag:"FX", aspect:"ar-16x9",
+          baseText:[
+            "<b>Noir</b> — когда хочешь кино-атмосферу.",
+            "",
+            "Чёрно-белое + контраст + настроение."
+          ]},
+        { key:"fx_boomerang", title:"FX • Boomerang", tag:"FX", aspect:"ar-1x1",
+          baseText:[
+            "<b>Boomerang</b> — петля/реверс.",
+            "",
+            "Виральная штука для реакций."
+          ]},
+        { key:"fx_audio", title:"Audio • mp3", tag:"AUDIO", aspect:"ar-16x9",
+          baseText:[
+            "<b>MP3</b> — вытащим звук из видео.",
+            "",
+            "Голос/музыка/эффекты — отдельно."
+          ]},
       ]
     };
 
-    // build ui
     function mkItem(obj){
       const d = document.createElement("div");
       d.className = "item";
       d.innerHTML = `
         <div class="itemIn">
-          <div class="tag">${obj.tag}</div>
+          <div class="tag">${escapeHtml(obj.tag)}</div>
           <b>${escapeHtml(obj.title)}</b>
-          <span>${escapeHtml(obj.desc)}</span>
+          <span>Открой — увидишь готовый пост в Telegram</span>
         </div>
       `;
       d.addEventListener("click", ()=> openPreview(obj));
       return d;
     }
+
     function mount(id, arr){
       const root = document.getElementById(id);
       root.innerHTML = "";
       arr.forEach(x => root.appendChild(mkItem(x)));
     }
-    mount("secPosts", DATA.posts);
-    mount("secCollage", DATA.collage);
-    mount("secEmoji", DATA.emoji);
-    mount("secVideo", DATA.video);
 
-    // modal
+    mount("secPosts", MODES.posts);
+    mount("secCollage", MODES.collage);
+    mount("secEmoji", MODES.emoji);
+    mount("secVideo", MODES.video);
+
+    // modal refs
     const modal = document.getElementById("modal");
     const modalTitle = document.getElementById("modalTitle");
-    const modalTag = document.getElementById("modalTag");
-    const modalText = document.getElementById("modalText");
-    const modalMedia = document.getElementById("modalMedia");
+    const styleRow = document.getElementById("styleRow");
+    const tgWrap = document.getElementById("tgWrap");
+    const tgBadge = document.getElementById("tgBadge");
+    const tgText = document.getElementById("tgText");
+    const tgMediaBox = document.getElementById("tgMediaBox");
+    const smallStatus = document.getElementById("smallStatus");
+
     const btnPick = document.getElementById("btnPick");
     const btnCopy = document.getElementById("btnCopy");
     const btnMore = document.getElementById("btnMore");
-    const status = document.getElementById("smallStatus");
+
     let current = null;
+    let currentStyle = "pov";
+
+    // style chips in modal
+    function renderStyleChips(){
+      styleRow.innerHTML = "";
+      STYLES.forEach(s=>{
+        const b = document.createElement("div");
+        b.className = "sChip" + (s.id === currentStyle ? " active" : "");
+        b.textContent = s.label;
+        b.addEventListener("click", ()=>{
+          currentStyle = s.id;
+          applyStyle();
+          renderStyleChips();
+        });
+        styleRow.appendChild(b);
+      });
+    }
+
+    function applyStyle(){
+      tgWrap.classList.remove(...STYLES.map(x=>x.cls));
+      const st = STYLES.find(x=>x.id===currentStyle) || STYLES[0];
+      tgWrap.classList.add(st.cls);
+    }
+
+    function setAspect(cls){
+      tgMediaBox.className = "tgMedia " + cls;
+    }
+
+    function setFooterPills(byModeKey){
+      // show/hide pills depending on mode (so it feels “real”)
+      const p = {
+        pill1: document.getElementById("pill1"),
+        pill2: document.getElementById("pill2"),
+        pill3: document.getElementById("pill3"),
+        pill4: document.getElementById("pill4"),
+        pill5: document.getElementById("pill5"),
+      };
+
+      // defaults (full pack)
+      let show = { pill1:true, pill2:true, pill3:true, pill4:true, pill5:true };
+
+      if (byModeKey.startsWith("style_")) { show = { pill1:true, pill2:true, pill3:true, pill4:true, pill5:false }; }
+      if (byModeKey.startsWith("grid_"))  { show = { pill1:false, pill2:false, pill3:true, pill4:true, pill5:false }; }
+      if (byModeKey.startsWith("collage")){ show = { pill1:false, pill2:false, pill3:false, pill4:true, pill5:true }; }
+      if (byModeKey === "circle")         { show = { pill1:true, pill2:false, pill3:false, pill4:true, pill5:false }; }
+      if (byModeKey === "avatar")         { show = { pill1:false, pill2:true, pill3:false, pill4:true, pill5:false }; }
+      if (byModeKey === "fx_audio")       { show = { pill1:false, pill2:false, pill3:false, pill4:true, pill5:false }; }
+
+      Object.keys(p).forEach(k=>{
+        p[k].style.display = show[k] ? "inline-flex" : "none";
+      });
+    }
 
     function openPreview(obj){
       current = obj;
+
+      // pick a style automatically for non-post modes
+      if (obj.key.startsWith("style_")) currentStyle = obj.key.replace("style_","").slice(0,3) === "old" ? "old" : (obj.key.includes("insider")?"ins":"pov");
+      // keep whatever user last chose otherwise
+
       modalTitle.textContent = obj.title;
-      modalTag.textContent = obj.tag;
-      modalText.textContent = (obj.sample ? obj.sample : ("Превью: " + obj.desc));
-      modalMedia.style.background = makeMediaBg(obj.key);
+      tgBadge.textContent = obj.tag;
+
+      // text content rendered like Telegram (bold/italic already inside strings)
+      tgText.innerHTML = obj.baseText.map(x=>escapeHtmlKeepTags(x)).join("\n");
+
+      setAspect(obj.aspect || "ar-4x5");
+      setFooterPills(obj.key);
+
+      renderStyleChips();
+      applyStyle();
+
       modal.classList.add("show");
-      status.textContent = "👀 Превью открыто. Выбери режим или попроси ещё.";
+      smallStatus.textContent = "👀 Сейчас ты видишь готовый вид поста в Telegram (шрифт/стиль/медиа).";
+
       try{ tg?.HapticFeedback?.impactOccurred("light"); } catch(e){}
     }
+
     function closeModal(){
       modal.classList.remove("show");
       try{ tg?.HapticFeedback?.impactOccurred("soft"); } catch(e){}
     }
+
     document.getElementById("modalClose").addEventListener("click", closeModal);
     modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
 
+    // choose mode -> send to bot
     btnPick.addEventListener("click", ()=>{
       if(!current) return;
-      // send selection to bot
       const payload = {
         type: "video_setup",
         mode: current.key,
-        caption: "",
-        // optional: tell bot to show specific templates/stuff
+        style: currentStyle, // bot can ignore if not needed now
       };
-      try{
-        tg?.sendData(JSON.stringify(payload));
-      } catch(e){}
-      toast("✅ Режим выбран. Возвращайся в бот и загружай файл.");
+      try{ tg?.sendData(JSON.stringify(payload)); } catch(e){}
+      toast("✅ Режим выбран. Теперь бот попросит файл.");
     });
 
+    // copy post text (plain, without html tags)
     btnCopy.addEventListener("click", async ()=>{
       if(!current) return;
-      const txt = current.sample || current.desc || "";
+      const plain = current.baseText.join("\n")
+        .replaceAll("<b>","").replaceAll("</b>","")
+        .replaceAll("<i>","").replaceAll("</i>","");
       try{
-        await navigator.clipboard.writeText(txt);
-        toast("📋 Текст скопирован");
+        await navigator.clipboard.writeText(plain);
+        toast("📋 Пост скопирован");
       } catch(e){
-        toast("Не смог скопировать (браузер). Но текст уже в превью.");
+        toast("Не смог скопировать (браузер). Но текст виден.");
       }
     });
 
     btnMore.addEventListener("click", ()=>{
       const pack = rngPack();
-      toast("🎲 Пак: " + pack.map(x=>x.title).join(" + "));
-      // show one of them
+      toast("✨ Пакет: " + pack.map(x=>x.title).join(" + "));
       openPreview(pack[0]);
     });
 
     // top chips
-    document.getElementById("chipHall").addEventListener("click", ()=>{
-      toast("🏆 Зал славы скоро. Топ активных / день / неделя / месяц.");
-    });
-    document.getElementById("chipGames").addEventListener("click", ()=>{
-      toast("🎰 Игры скоро. Рулетка с ZERO и призами (VIP/баллы).");
-    });
-    document.getElementById("chipPromo").addEventListener("click", ()=>{
-      toast("💥 Акции: админ включает, тикер сообщает всем. Следи за бегущей строкой.");
-    });
+    document.getElementById("chipHall").addEventListener("click", ()=> toast("🏆 Зал славы: топ активных скоро (день/неделя/месяц)."));
+    document.getElementById("chipGames").addEventListener("click", ()=> toast("🎰 Рулетка с ZERO скоро (VIP/бонусы)."));
+    document.getElementById("chipPromo").addEventListener("click", ()=> toast("💥 Акции включаются админом. Смотри бегущую строку."));
 
     // buttons
-    document.getElementById("btnHow").addEventListener("click", ()=>{
-      openHelp();
-    });
     document.getElementById("btnRandom").addEventListener("click", ()=>{
       const pack = rngPack();
       openPreview(pack[0]);
       toast("🎲 Рандом-пак: " + pack.map(x=>x.title).join(" + "));
+    });
+    document.getElementById("btnHow").addEventListener("click", ()=>{
+      toast("Схема: открыл режим ➜ увидел реальный пост ➜ выбрал ➜ бот попросил файл.");
     });
 
     // back
@@ -1064,45 +1251,16 @@
       try{ tg?.close(); } catch(e){ history.back(); }
     });
 
-    // help modal content (reuse modal)
-    function openHelp(){
-      current = { key:"help", title:"Как пользоваться CADRHUB", tag:"HELP", desc:"", sample:
-`1) В мини-аппке выбери режим (ты сейчас тут).  
-2) Нажми “✅ Выбрать режим”.  
-3) Вернись в бота — он попросит загрузить видео/фото.  
-4) Получишь результат: кружок/аватар/эмодзи-пак/пост/коллаж.
-
-⚡ Лайфхак:
-— Хочешь “дорого”? Сразу делай: 20×1 эмодзи + пост в стиле POV.  
-— Для профиля: Видео-аватар + Noir.  
-— Для рекламы: 16:9 + Brand-коллаж.`};
-      openPreview(current);
-    }
-
-    // random pack generator
+    // random pack
     function rng(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
     function rngPack(){
-      const pickPost = rng(DATA.posts);
-      const pickVideo = rng(DATA.video);
-      const pickEmoji = rng(DATA.emoji);
-      const pickColl = rng(DATA.collage);
-      // sometimes return 3, sometimes 4
+      const pickVideo = rng(MODES.video);
+      const pickEmoji = rng(MODES.emoji);
+      const pickPost  = rng(MODES.posts);
+      const pickColl  = rng(MODES.collage);
       const pack = [pickVideo, pickEmoji, pickPost];
       if (Math.random() > 0.55) pack.push(pickColl);
       return pack;
-    }
-
-    // media background by mode (fake preview)
-    function makeMediaBg(key){
-      const map = {
-        "circle": "radial-gradient(220px 220px at 30% 35%, rgba(0,255,240,.24), transparent 60%), radial-gradient(260px 240px at 80% 30%, rgba(255,45,255,.18), transparent 60%), linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.14))",
-        "avatar": "radial-gradient(220px 220px at 50% 40%, rgba(255,45,255,.18), transparent 60%), radial-gradient(260px 240px at 20% 70%, rgba(0,255,240,.14), transparent 60%), linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.16))",
-        "grid_20x1": "repeating-linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,.10) 12px, rgba(0,0,0,0) 12px, rgba(0,0,0,0) 24px), radial-gradient(240px 160px at 80% 40%, rgba(0,255,240,.12), transparent 60%), linear-gradient(135deg, rgba(255,45,255,.10), rgba(0,0,0,.18))",
-        "grid_3x3": "repeating-linear-gradient(90deg, rgba(255,255,255,.09), rgba(255,255,255,.09) 22px, rgba(0,0,0,0) 22px, rgba(0,0,0,0) 44px), repeating-linear-gradient(0deg, rgba(255,255,255,.06), rgba(255,255,255,.06) 22px, rgba(0,0,0,0) 22px, rgba(0,0,0,0) 44px), radial-gradient(240px 160px at 20% 40%, rgba(255,204,0,.10), transparent 60%)",
-        "16_9": "linear-gradient(90deg, rgba(0,255,240,.12), rgba(255,45,255,.12)), radial-gradient(300px 180px at 30% 30%, rgba(255,255,255,.10), transparent 60%), linear-gradient(135deg, rgba(0,0,0,.20), rgba(255,255,255,.05))",
-        "9_16": "linear-gradient(0deg, rgba(0,255,240,.10), rgba(255,45,255,.10)), radial-gradient(300px 180px at 60% 30%, rgba(255,204,0,.09), transparent 60%), linear-gradient(135deg, rgba(0,0,0,.20), rgba(255,255,255,.05))"
-      };
-      return map[key] || "radial-gradient(240px 160px at 30% 30%, rgba(0,255,240,.12), transparent 60%), radial-gradient(260px 180px at 80% 25%, rgba(255,45,255,.10), transparent 60%), linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,0,0,.16))";
     }
 
     // toast
@@ -1133,7 +1291,7 @@
       toastTimer = setTimeout(()=>{ t.style.opacity="0"; }, 2600);
     }
 
-    // escape
+    // safe escaping: allow <b> <i> only (for preview)
     function escapeHtml(s){
       return String(s)
         .replaceAll("&","&amp;")
@@ -1142,30 +1300,13 @@
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
     }
-
-    // FUN random telegram jokes in ticker if empty
-    if(!tickerTextRaw){
-      const fun = [
-        "Праздник скоро: если Telegram даст нам 1000 звёзд — мы дадим вам VIP 😄",
-        "Кружок — это новая валюта. CADRHUB печатает деньги 🟣",
-        "Секрет: эмодзи-видео = удержание. Называй это магией ✨",
-        "Админ на минуту отвлёкся — и вы уже сделали контент быстрее SMM-отдела 😎",
-        "Если видишь эту строку — значит сегодня кто-то поймает бонус 🎁"
-      ];
-      const chosen = fun[Math.floor(Math.random()*fun.length)];
-      tickerBox.style.display = "block";
-      document.getElementById("tickerTextA").textContent = chosen;
-      document.getElementById("tickerTextB").textContent = chosen;
+    function escapeHtmlKeepTags(s){
+      // escape everything, then restore &lt;b&gt; &lt;/b&gt; &lt;i&gt; &lt;/i&gt;
+      let x = escapeHtml(String(s));
+      x = x.replaceAll("&lt;b&gt;","<b>").replaceAll("&lt;/b&gt;","</b>");
+      x = x.replaceAll("&lt;i&gt;","<i>").replaceAll("&lt;/i&gt;","</i>");
+      return x;
     }
-
-    // minor: show selected mode hint
-    const heroMode = document.getElementById("heroMode");
-    document.getElementById("grid").addEventListener("click", (e)=>{
-      const it = e.target.closest(".item");
-      if(!it) return;
-      heroMode.textContent = "Preview";
-    });
-
   </script>
 </body>
 </html>
